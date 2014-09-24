@@ -35,10 +35,20 @@ use wbraganca\dynamicform\DynamicFormWidget;
 use kartik\widgets\DatePicker;
 ?>
 
-<?php $form = ActiveForm::begin(['enableClientValidation' => false]); ?>
+<?php $form = ActiveForm::begin([
+     'options' => [
+        'id' => 'dynamic-form'
+    ]
+]); ?>
 ...
+
 <?php DynamicFormWidget::begin([
     'cloneContainer' => '.clone-item',
+    'model' => $modelsMultipleItem[0],
+    'formId' => 'dynamic-form',
+    'formFields' => [
+        'nome'
+    ],
     'options' => [
         'limit' => 4, // the maximum times, an element can be cloned (default 999)
     ]

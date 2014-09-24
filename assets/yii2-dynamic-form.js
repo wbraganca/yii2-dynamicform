@@ -74,6 +74,7 @@
             var $container = $(this);
             redoIDs($container);
             restoreSpecialJs($container);
+            fixFormValidaton();
         }
     };
 
@@ -82,8 +83,6 @@
         var cloneCount = $container.find(config.cloneContainer).length;
         // check if we've reached the maximum limit
         if (cloneCount < config.limit) {
-            // get the closest parent clone
-            //$toclone = $this.closest(config.cloneContainer);
             if (config.cloneFromTemplate !== false) {
                 $toclone = $($(config.cloneFromTemplate).html());
             } else{
@@ -99,15 +98,37 @@
             } else {
                 $(config.cloneContainer).last().after($newclone);
             }
-            // reformat the id attributes
             redoIDs($container);
             removeErrorCssClass($newclone);
             restoreSpecialJs($container);
+            fixFormValidaton();
             $container.triggerHandler(events.afterClone, $newclone);
         } else {
             // trigger a custom event for hooking
             $container.triggerHandler(events.limitReached, config.limit);
         }
+    };
+
+    var fixFormValidaton = function(){
+        $(config.cloneContainer).each(function(i, tr) {
+            config.fields.forEach(function(v) {
+                var id = v.id.replace("{}", i);
+                var attribute = $("#" + config.formId).yiiActiveForm("find", v.id.replace("{}", 0));
+                if (attribute !== undefined) {
+                    attribute = $.extend(true, {}, attribute);
+                    attribute.id = id;
+                    attribute.container = ".field-" + id;
+                    attribute.input = "#" + id;
+                    attribute.name = v.name.replace("{}", i);
+                    attribute.value = $("#" + id).val();
+                    attribute.status = 0;
+                    if ($("#" + config.formId).yiiActiveForm("find", id) !== "undefined") {
+                        $("#" + config.formId).yiiActiveForm("remove", id);
+                    }
+                    $("#" + config.formId).yiiActiveForm("add", attribute);
+                }
+            });
+        });
     };
 
     var removeItem = function($container, $item) {
@@ -120,6 +141,7 @@
             $todelete.remove();
             redoIDs($container);
             restoreSpecialJs($container);
+            fixFormValidaton();
             $container.triggerHandler(events.afterRemove);
         }
     }
