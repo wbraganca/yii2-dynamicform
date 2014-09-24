@@ -50,7 +50,6 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     protected function initOptions()
     {
-        $this->id = 'dynamicform-' . $this->id;
         $this->templateID = 'template-' . $this->id;
         $this->registerAssets();
         ob_start();
