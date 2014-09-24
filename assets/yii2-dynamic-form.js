@@ -90,6 +90,9 @@
             }
             // clone it
             $newclone = $toclone.clone(false, false);
+            $newclone.find('input, textarea, select').each(function() {
+                $(this).val('');
+            });
             if (config.clonePosition != 'after') {
                 $(config.cloneContainer).firt().before($newclone);
             } else {
