@@ -20,7 +20,8 @@
     var events = {
         beforeClone: 'beforeClone',
         afterClone: 'afterClone',
-        limitReached: 'limitReached'
+        limitReached: 'limitReached',
+        afterRemove: 'afterRemove'
     };
 
     var defaults = {
@@ -119,6 +120,7 @@
             $todelete.remove();
             redoIDs($container);
             restoreSpecialJs($container);
+            $container.triggerHandler(events.afterRemove);
         }
     }
 
