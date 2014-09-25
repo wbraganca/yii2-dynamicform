@@ -47,7 +47,8 @@ use kartik\widgets\DatePicker;
     'model' => $modelsMultipleItem[0],
     'formId' => 'dynamic-form',
     'formFields' => [
-        'nome'
+        'field_text',
+        'field_date'
     ],
     'options' => [
         'limit' => 4, // the maximum times, an element can be cloned (default 999)
@@ -65,8 +66,8 @@ use kartik\widgets\DatePicker;
             <div class="clearfix"></div>
         </div>
         <div class="panel-body">
-            <?= $form->field($modelMultipleItem, "[{$i}]text")->textInput(['maxlength' => 64]) ?>
-            <?= $form->field($modelMultipleItem, "[{$i}]date")->widget(DatePicker::classname(), [
+            <?= $form->field($modelMultipleItem, "[{$i}]field_text")->textInput(['maxlength' => 64]) ?>
+            <?= $form->field($modelMultipleItem, "[{$i}]field_date")->widget(DatePicker::classname(), [
                 'pluginOptions' => [
                     'autoclose'=>true
                 ]
