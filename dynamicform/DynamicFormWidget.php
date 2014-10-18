@@ -8,6 +8,7 @@
 namespace wbraganca\dynamicform;
 
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\CssSelector\CssSelector;
 use yii\helpers\Json;
 use yii\helpers\Html;
 use yii\base\InvalidConfigException;
@@ -26,7 +27,15 @@ class DynamicFormWidget extends \yii\base\Widget
     /**
      * @var string
      */
-    public $cloneContainer;
+    public $dynamicItems;
+    /**
+     * @var string
+     */
+    public $dynamicItem;
+    /**
+     * @var boolean
+     */
+    public $initWithItems = true;
      /**
      * @var Model|ActiveRecord the model used for the form
      */
@@ -52,8 +61,11 @@ class DynamicFormWidget extends \yii\base\Widget
     public function init()
     {
         parent::init();
-        if (empty($this->cloneContainer)) {
-            throw new InvalidConfigException("The 'cloneContainer' property must be set.");
+        if (empty($this->dynamicItems)) {
+            throw new InvalidConfigException("The 'dynamicItems' property must be set.");
+        }
+        if (empty($this->dynamicItem)) {
+            throw new InvalidConfigException("The 'dynamicItem' property must be set.");
         }
         if (empty($this->model) || !$this->model instanceof \yii\base\Model) {
             throw new InvalidConfigException("The 'model' property must be set and must extend from '\\yii\\base\\Model'.");
@@ -85,8 +97,9 @@ class DynamicFormWidget extends \yii\base\Widget
     {
         $view = $this->getView();
         DynamicFormAsset::register($view);
-        $this->options['cloneContainer'] = $this->cloneContainer;
-        $this->options['cloneFromTemplate'] = '#' . $this->templateID;
+        $this->options['dynamicItems'] = $this->dynamicItems;
+        $this->options['dynamicItem'] = $this->dynamicItem;
+        $this->options['template'] = '#' . $this->templateID;
         $this->options['fields'] = [];
         foreach ($this->formFields as $field) {
              $this->options['fields'][] = [
@@ -103,13 +116,35 @@ class DynamicFormWidget extends \yii\base\Widget
     {
         $content = ob_get_clean();
         $crawler = new Crawler($content);
-        $results = $crawler->filter($this->cloneContainer);
+        $results = $crawler->filter($this->dynamicItem);
         $document = new \DOMDocument('1.0', 'UTF-8');
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
-        $htmlFirstItem = "\n" . rtrim($document->saveHTML())."\n";
+        $htmlFirstItem = "\n" . trim($document->saveHTML())."\n";
         $template = Html::tag('template', $htmlFirstItem, ['id' => $this->templateID, 'style' => 'display: none;']);
-        $output = $content . $template . "\n";
+        $content = ($this->initWithItems === true) ? $content : $this->removeItems($content);
+        $output =  $content . $template . "\n";
         echo Html::tag('div', $output, ['id' => $this->id]);
+    }
+
+    private function removeItems($content)
+    {
+        $document = new \DOMDocument('1.0');
+        $crawler = new Crawler($content);
+        $root = $document->appendChild($document->createElement('_root'));
+        $crawler->rewind();
+        $root->appendChild($document->importNode($crawler->current(), true));
+        $domxpath = new \DOMXPath($document);
+
+        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->dynamicItem));
+        foreach ($crawlerInverse as $elementToRemove) {
+            $parent = $elementToRemove->parentNode;
+            $parent->removeChild($elementToRemove);
+        }
+
+        $crawler->clear();
+        $crawler->add($document);
+
+        return $crawler->filter('body')->eq(0)->html();
     }
 
 }

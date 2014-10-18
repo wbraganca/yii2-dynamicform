@@ -27,18 +27,13 @@
     var defaults = {
         // the maximum times, an element can be cloned
         limit: 999, //setting it to a high number, by default
-        cloneContainer: '.clone-container',
-        // a valid jQuery selector for the element that triggers cloning
-        // must be a child of the cloneContainer selector
+        min: 1,
+        dynamicItems: '.dynamic-items',
+        dynamicItem: '.dynamic-item',
         cloneButton: '.clone',
-        // a valid jQuery selector for the element that triggers removal
-        // must be a child of the cloneContainer selector
         deleteButton: '.delete',
-        // the position the clone will be inserted
-        // relative to the original element
         clonePosition: 'after', // or 'before'
-        // a valid jQuery selector for the element to be cloned
-        cloneFromTemplate: false
+        template: false
     };
 
     var config;
@@ -59,14 +54,12 @@
                         event.preventDefault();
                         $container.triggerHandler(events.beforeClone, [$(this)]);
                         startClone(event, $(this), $container);
-                        if ($container.find(config.deleteButton).length) {
-                            $container.on('click', config.deleteButton, function(event) {
-                                event.preventDefault();
-                                removeItem($container, $(this));
-                            });
-                        }
                     });
                 }
+                $container.on('click', config.deleteButton, function(event) {
+                    event.preventDefault();
+                    removeItem($container, $(this));
+                });
             });
         },
 
@@ -80,23 +73,19 @@
 
     var startClone = function(event, $btnAdd, $container) {
         // get the count of all the clones
-        var cloneCount = $container.find(config.cloneContainer).length;
+        var cloneCount = $container.find(config.dynamicItem).length;
         // check if we've reached the maximum limit
         if (cloneCount < config.limit) {
-            if (config.cloneFromTemplate !== false) {
-                $toclone = $($(config.cloneFromTemplate).html());
-            } else{
-                $toclone = $(config.cloneContainer).first();
-            }
+            $toclone = $($(config.template).html());
             // clone it
             $newclone = $toclone.clone(false, false);
             $newclone.find('input, textarea, select').each(function() {
                 $(this).val('');
             });
             if (config.clonePosition != 'after') {
-                $(config.cloneContainer).firt().before($newclone);
+                $(config.dynamicItems).prepend($newclone);
             } else {
-                $(config.cloneContainer).last().after($newclone);
+                $(config.dynamicItems).append($newclone);
             }
             redoIDs($container);
             removeErrorCssClass($newclone);
@@ -109,8 +98,9 @@
         }
     };
 
-    var fixFormValidaton = function(){
-        $(config.cloneContainer).each(function(i, tr) {
+    var fixFormValidaton = function() {
+
+        $(config.dynamicItem).each(function(i) {
             config.fields.forEach(function(v) {
                 var id = v.id.replace("{}", i);
                 var attribute = $("#" + config.formId).yiiActiveForm("find", v.id.replace("{}", 0));
@@ -132,12 +122,10 @@
     };
 
     var removeItem = function($container, $item) {
-        var cloneCount = $container.find(config.cloneContainer).length;
-        // never delete all the clones
-        // at least one must remain
-        if (cloneCount > 1) {
+        var cloneCount = $container.find(config.dynamicItem).length;
+        if (cloneCount > config.min) {
             // get the closest parent clone
-            $todelete = $item.closest(config.cloneContainer);
+            $todelete = $item.closest(config.dynamicItem);
             $todelete.remove();
             redoIDs($container);
             restoreSpecialJs($container);
@@ -157,7 +145,7 @@
 
     var restoreSpecialJs = function($container) {
         // datepicker
-        var $hasDatepicker = $(config.cloneContainer).find('[data-plugin-name=datepicker]');
+        var $hasDatepicker = $(config.dynamicItems).find('[data-plugin-name=datepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().datepicker('remove');
@@ -166,7 +154,7 @@
         }
 
         // maskmoney
-        var $hasMaskmoney = $(config.cloneContainer).find('[data-plugin-name=maskMoney]');
+        var $hasMaskmoney = $(config.dynamicItems).find('[data-plugin-name=maskMoney]');
         if ($hasMaskmoney.length > 0) {
             $hasMaskmoney.each(function() {
                 $(this).parent().find('input').removeData().off();
@@ -184,7 +172,7 @@
         }
 
         // fileinput
-        var $hasFileinput = $(config.cloneContainer).find('[data-plugin-name=fileinput]');
+        var $hasFileinput = $(config.dynamicItems).find('[data-plugin-name=fileinput]');
         if ($hasFileinput.length > 0) {
             $hasFileinput.each(function() {
                 $(this).fileinput(eval($(this).attr('data-plugin-options')));
@@ -192,7 +180,7 @@
         }
 
         // TouchSpin
-        var $hasTouchSpin = $(config.cloneContainer).find('[data-plugin-name=TouchSpin]');
+        var $hasTouchSpin = $(config.dynamicItems).find('[data-plugin-name=TouchSpin]');
         if ($hasTouchSpin.length > 0) {
             $hasTouchSpin.each(function() {
                 $(this).TouchSpin('destroy');
@@ -202,7 +190,7 @@
     };
 
     var redoIDs = function($container) {
-        $container.find(config.cloneContainer).each(function(i) {
+        $container.find(config.dynamicItem).each(function(i) {
             // first modify the clone id
             var j = i;
             var $obj = $(this);
