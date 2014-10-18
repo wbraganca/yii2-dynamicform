@@ -6,6 +6,7 @@
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  */
 (function ($) {
+    var pluginName = 'yiiDynamicForm';
     $.fn.yiiDynamicForm = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -36,30 +37,35 @@
         template: false
     };
 
-    var config;
-
     var regex = /(.*-)(\d)(-.*)/i;
 
     var methods = {
         init: function (options) {
             return this.each(function () {
                 var $container = $(this);
-                if ($container.data('yiiDynamicForm')) {
-                    return;
-                }
-                config = $.extend({}, defaults, options || {});
-                if ($container.find(config.cloneButton).length) {
-                    // add a click handler for the clone button
-                    $container.on('click', config.cloneButton, function(event) {
+
+                var data = $container.data(pluginName);
+                if (!data){
+                    var settings = $.extend({}, defaults, options || {});
+
+                    $container.data(pluginName, {
+                        target : $container,
+                        settings: settings
+                    });
+                    if ($container.find(settings.cloneButton).length) {
+                        // add a click handler for the clone button
+                        $container.on('click', settings.cloneButton, function(event) {
+                            event.preventDefault();
+                            $container.triggerHandler(events.beforeClone, [$(this)]);
+                            startClone(event, $(this), $container);
+                        });
+                    }
+                    $container.on('click', settings.deleteButton, function(event) {
                         event.preventDefault();
-                        $container.triggerHandler(events.beforeClone, [$(this)]);
-                        startClone(event, $(this), $container);
+                        removeItem($container, $(this));
                     });
                 }
-                $container.on('click', config.deleteButton, function(event) {
-                    event.preventDefault();
-                    removeItem($container, $(this));
-                });
+
             });
         },
 
@@ -67,11 +73,13 @@
             var $container = $(this);
             redoIDs($container);
             restoreSpecialJs($container);
-            fixFormValidaton();
+            fixFormValidaton($container);
         }
     };
 
     var startClone = function(event, $btnAdd, $container) {
+        var config = $container.data(pluginName).settings;
+
         // get the count of all the clones
         var cloneCount = $container.find(config.dynamicItem).length;
         // check if we've reached the maximum limit
@@ -90,7 +98,7 @@
             redoIDs($container);
             removeErrorCssClass($newclone);
             restoreSpecialJs($container);
-            fixFormValidaton();
+            fixFormValidaton($container);
             $container.triggerHandler(events.afterClone, $newclone);
         } else {
             // trigger a custom event for hooking
@@ -98,8 +106,8 @@
         }
     };
 
-    var fixFormValidaton = function() {
-
+    var fixFormValidaton = function($container) {
+        var config = $container.data(pluginName).settings;
         $(config.dynamicItem).each(function(i) {
             config.fields.forEach(function(v) {
                 var id = v.id.replace("{}", i);
@@ -122,6 +130,7 @@
     };
 
     var removeItem = function($container, $item) {
+        var config = $container.data(pluginName).settings;
         var cloneCount = $container.find(config.dynamicItem).length;
         if (cloneCount > config.min) {
             // get the closest parent clone
@@ -129,7 +138,7 @@
             $todelete.remove();
             redoIDs($container);
             restoreSpecialJs($container);
-            fixFormValidaton();
+            fixFormValidaton($container);
             $container.triggerHandler(events.afterRemove);
         }
     }
@@ -144,6 +153,7 @@
     };
 
     var restoreSpecialJs = function($container) {
+        var config = $container.data(pluginName).settings;
         // datepicker
         var $hasDatepicker = $(config.dynamicItems).find('[data-plugin-name=datepicker]');
         if ($hasDatepicker.length > 0) {
@@ -190,6 +200,7 @@
     };
 
     var redoIDs = function($container) {
+        var config = $container.data(pluginName).settings;
         $container.find(config.dynamicItem).each(function(i) {
             // first modify the clone id
             var j = i;
