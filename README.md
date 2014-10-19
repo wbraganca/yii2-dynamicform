@@ -43,7 +43,8 @@ use kartik\widgets\DatePicker;
 ...
 
 <?php DynamicFormWidget::begin([
-    'cloneContainer' => '.clone-item',
+    'dynamicItems' => '#form-dynamic-itens',
+    'dynamicItem' => '.form-dynamic-item',
     'model' => $modelsMultipleItem[0],
     'formId' => 'dynamic-form',
     'formFields' => [
@@ -54,9 +55,9 @@ use kartik\widgets\DatePicker;
         'limit' => 4, // the maximum times, an element can be cloned (default 999)
     ]
 ]); ?>
-
+<div id="form-dynamic-itens">
 <?php foreach ($modelsMultipleItem as $i => $modelMultipleItem): ?>
-    <div class="clone-item panel panel-default">
+    <div class="form-dynamic-item panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title pull-left" style="padding-top: 7px;">Item</h3>
             <div class="pull-right">
@@ -75,6 +76,7 @@ use kartik\widgets\DatePicker;
         </div>
     </div>
 <?php endforeach; ?>
+</div>
 
 <?php DynamicFormWidget::end(); ?>
 ...
