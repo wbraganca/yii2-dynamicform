@@ -114,7 +114,7 @@ class DynamicFormWidget extends \yii\base\Widget
 
     public function run()
     {
-        $content = ob_get_clean();
+        $content = utf8_decode(ob_get_clean());
         $crawler = new Crawler($content);
         $results = $crawler->filter($this->dynamicItem);
         $document = new \DOMDocument('1.0', 'UTF-8');
@@ -128,7 +128,7 @@ class DynamicFormWidget extends \yii\base\Widget
 
     private function removeItems($content)
     {
-        $document = new \DOMDocument('1.0');
+        $document = new \DOMDocument('1.0', 'UTF-8');
         $crawler = new Crawler($content);
         $root = $document->appendChild($document->createElement('_root'));
         $crawler->rewind();
@@ -143,8 +143,6 @@ class DynamicFormWidget extends \yii\base\Widget
 
         $crawler->clear();
         $crawler->add($document);
-
         return $crawler->filter('body')->eq(0)->html();
     }
-
 }
