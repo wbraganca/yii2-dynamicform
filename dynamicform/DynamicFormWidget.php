@@ -114,10 +114,11 @@ class DynamicFormWidget extends \yii\base\Widget
 
     public function run()
     {
-        $content = utf8_decode(ob_get_clean());
-        $crawler = new Crawler($content);
+        $content = ob_get_clean();
+        $crawler = new Crawler();
+        $crawler->addHTMLContent($content, \Yii::$app->charset);
         $results = $crawler->filter($this->dynamicItem);
-        $document = new \DOMDocument('1.0', 'UTF-8');
+        $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
         $htmlFirstItem = "\n" . trim($document->saveHTML())."\n";
         $template = Html::tag('template', $htmlFirstItem, ['id' => $this->templateID, 'style' => 'display: none;']);
@@ -128,8 +129,9 @@ class DynamicFormWidget extends \yii\base\Widget
 
     private function removeItems($content)
     {
-        $document = new \DOMDocument('1.0', 'UTF-8');
-        $crawler = new Crawler($content);
+        $document = new \DOMDocument('1.0', \Yii::$app->charset);
+        $crawler = new Crawler();
+        $crawler->addHTMLContent($content, \Yii::$app->charset);
         $root = $document->appendChild($document->createElement('_root'));
         $crawler->rewind();
         $root->appendChild($document->importNode($crawler->current(), true));
