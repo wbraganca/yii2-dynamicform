@@ -44,7 +44,7 @@ class DynamicFormAsset extends \yii\web\AssetBundle
      */
     public function init()
     {
-        $this->setSourcePath(__DIR__ . '/../assets');
+        $this->setSourcePath(__DIR__ . '/assets');
         $this->setupAssets('js', ['yii2-dynamic-form']);
         parent::init();
     }

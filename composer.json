@@ -21,6 +21,6 @@
 		"symfony/css-selector": "*"
 	},
 	"autoload": {
-		"psr-4": { "wbraganca\\": "" }
+		"psr-4": { "wbraganca\\dynamicform\\": "" }
 	}
 }
