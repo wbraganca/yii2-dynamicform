@@ -155,7 +155,7 @@
     var restoreSpecialJs = function($container) {
         var config = $container.data(pluginName).settings;
 
-        // datepicker
+        // "kartik-v/yii2-widget-datepicker"
         var $hasDatepicker = $(config.dynamicItems).find('[data-plugin-name=datepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
@@ -164,7 +164,18 @@
             });
         }
 
-        // maskmoney
+        // "kartik-v/yii2-widget-timepicker"
+        var $hasTimepicker = $(config.dynamicItems).find('[data-plugin-name=timepicker]');
+        if ($hasTimepicker.length > 0) {
+            $hasTimepicker.each(function() {
+                $(this).removeData().off();
+                $(this).parent().find('.bootstrap-timepicker-widget').remove();
+                $(this).unbind();
+                $(this).timepicker(eval($(this).attr('data-plugin-options')));
+            });
+        }
+
+        // "kartik-v/yii2-money"
         var $hasMaskmoney = $(config.dynamicItems).find('[data-plugin-name=maskMoney]');
         if ($hasMaskmoney.length > 0) {
             $hasMaskmoney.each(function() {
@@ -182,7 +193,7 @@
             });
         }
 
-        // fileinput
+        // "kartik-v/yii2-widget-fileinput"
         var $hasFileinput = $(config.dynamicItems).find('[data-plugin-name=fileinput]');
         if ($hasFileinput.length > 0) {
             $hasFileinput.each(function() {
@@ -190,7 +201,7 @@
             });
         }
 
-        // TouchSpin
+        // "kartik-v/yii2-widget-touchspin"
         var $hasTouchSpin = $(config.dynamicItems).find('[data-plugin-name=TouchSpin]');
         if ($hasTouchSpin.length > 0) {
             $hasTouchSpin.each(function() {
@@ -199,7 +210,7 @@
             });
         }
 
-        // Spectrum
+        // "kartik-v/yii2-widget-colorinput"
         var $hasSpectrum = $(config.dynamicItems).find('[data-plugin-name=spectrum]');
         if ($hasSpectrum.length > 0) {
             $hasSpectrum.each(function() {
