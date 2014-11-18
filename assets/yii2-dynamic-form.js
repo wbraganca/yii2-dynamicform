@@ -154,6 +154,7 @@
 
     var restoreSpecialJs = function($container) {
         var config = $container.data(pluginName).settings;
+
         // datepicker
         var $hasDatepicker = $(config.dynamicItems).find('[data-plugin-name=datepicker]');
         if ($hasDatepicker.length > 0) {
@@ -195,6 +196,27 @@
             $hasTouchSpin.each(function() {
                 $(this).TouchSpin('destroy');
                 $(this).TouchSpin(eval($(this).attr('data-plugin-options')));
+            });
+        }
+
+        // Spectrum
+        var $hasSpectrum = $(config.dynamicItems).find('[data-plugin-name=spectrum]');
+        if ($hasSpectrum.length > 0) {
+            $hasSpectrum.each(function() {
+                var id = '#' + $(this).attr('id');
+                var sourceID  = id + '-source';
+                $(sourceID).spectrum('destroy');
+                $(sourceID).unbind();
+                $(id).unbind();
+                var configSpectrum = eval($(this).attr('data-plugin-options'));
+                configSpectrum.change = function (color) {
+                    jQuery(id).val(color.toString());
+                };
+                $(sourceID).spectrum(configSpectrum);
+                $(sourceID).spectrum('set', jQuery(id).val());
+                $(id).on('change', function(){
+                    $(sourceID).spectrum('set', jQuery(id).val());
+                });
             });
         }
     };
