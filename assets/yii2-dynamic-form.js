@@ -231,6 +231,18 @@
                 });
             });
         }
+
+        // "kartik-v/yii2-widget-select2"
+        var $hasSelect2 = $(config.dynamicItems).find('[data-plugin-name=select2]');
+        if ($hasSelect2.length > 0) {
+            $hasSelect2.each(function() {
+                var id = $(this).attr('id');
+                var configSelect2 = eval($(this).attr('data-plugin-options'));
+                $(this).select2('destroy');
+                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id));
+                $('#' + id).on('select2-open', function(){initSelect2DropStyle(id)});
+            });
+        }
     };
 
     var redoIDs = function($container) {
@@ -257,7 +269,7 @@
                         });
                     }
                 }
-                // attribute for
+                // "for" attribute 
                 var elmLabel = $(this).attr('for');
                 if (elmLabel) {
                     var match = elmLabel.match(regex);
@@ -267,7 +279,7 @@
                         $(this).attr('for', elmLabel + i);
                     }
                 }
-                // attribute name
+                // "name" attribute 
                 var name = $(this).attr('name');
                 // This will increment the numeric array index for cloned field names
                 if (name) {
