@@ -223,6 +223,7 @@
                 configSpectrum.change = function (color) {
                     jQuery(id).val(color.toString());
                 };
+                $(sourceID).attr('name', $(sourceID).attr('id'));
                 $(sourceID).spectrum(configSpectrum);
                 $(sourceID).spectrum('set', jQuery(id).val());
                 $(id).on('change', function(){
