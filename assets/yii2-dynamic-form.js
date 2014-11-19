@@ -243,6 +243,27 @@
                 $('#' + id).on('select2-open', function(){initSelect2DropStyle(id)});
             });
         }
+
+        // "kartik-v/yii2-widget-depdrop"
+        var $hasDepdrop = $(config.dynamicItems).find('[data-plugin-name=depdrop]');
+        if ($hasDepdrop.length > 0) {
+            $hasDepdrop.each(function() {
+                $(this).removeData().off();
+                $(this).unbind();
+                var configDepdrop = eval($(this).attr('data-plugin-options'));
+                var inputID = $(this).attr('id');
+                var matchID = inputID.match(regex);
+                if (matchID && matchID.length === 4) {
+                    for (index = 0; index < configDepdrop.depends.length; ++index) {
+                        var match = configDepdrop.depends[index].match(regex);
+                        if (match && match.length === 4) {
+                            configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
+                        }
+                    }
+                }
+                $(this).depdrop(configDepdrop);
+            });
+        }
     };
 
     var redoIDs = function($container) {
