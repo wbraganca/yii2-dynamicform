@@ -139,6 +139,14 @@
             redoIDs($container);
             restoreSpecialJs($container);
             fixFormValidaton($container);
+            if (cloneCount > 1) {
+                config.fields.forEach(function(v) {
+                    var id = v.id.replace("{}", (cloneCount - 1));
+                    if ($("#" + config.formId).yiiActiveForm("find", id) !== "undefined") {
+                        $("#" + config.formId).yiiActiveForm("remove", id);
+                    }
+                });
+            }
             $container.triggerHandler(events.afterRemove);
         }
     }
