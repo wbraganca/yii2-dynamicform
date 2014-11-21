@@ -32,10 +32,6 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     public $dynamicItem;
-    /**
-     * @var boolean
-     */
-    public $initWithItems = true;
      /**
      * @var Model|ActiveRecord the model used for the form
      */
@@ -122,7 +118,9 @@ class DynamicFormWidget extends \yii\base\Widget
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
         $htmlFirstItem = "\n" . trim($document->saveHTML())."\n";
         $template = Html::tag('template', $htmlFirstItem, ['id' => $this->templateID, 'style' => 'display: none;']);
-        $content = ($this->initWithItems === true) ? $content : $this->removeItems($content);
+        if (isset($this->options['min']) && $this->options['min'] === 0 && $this->model->isNewRecord) {
+            $content = $this->removeItems($content);
+        }
         $output =  $content . $template . "\n";
         echo Html::tag('div', $output, ['id' => $this->id]);
     }
