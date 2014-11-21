@@ -3,6 +3,7 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+- bug #6: Fixed settings for datepicker
 - enh: Added support for "kartik-v/yii2-widget-depdrop"
 - enh: Added support for "kartik-v/yii2-widget-select2"
 - bug: Fixed html name attribute for "kartik-v/yii2-widget-colorinput"

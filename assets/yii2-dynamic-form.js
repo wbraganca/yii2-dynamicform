@@ -168,7 +168,7 @@
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker($(this).attr('data-plugin-options'));
+                $(this).parent().datepicker(eval($(this).attr('data-plugin-options')));
             });
         }
 
