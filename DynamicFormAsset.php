@@ -19,6 +19,7 @@ class DynamicFormAsset extends \yii\web\AssetBundle
      */
     public $depends = [
         'yii\web\JqueryAsset',
+        'yii\widgets\ActiveFormAsset'
     ];
 
     /**

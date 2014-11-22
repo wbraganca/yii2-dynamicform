@@ -105,7 +105,7 @@ class DynamicFormWidget extends \yii\base\Widget
         }
         $this->options['formId'] = $this->formId;
         $options = Json::encode($this->options);
-        $view->registerJs('$("#' . $this->id . '").yiiDynamicForm(' .$options .')');
+        $view->registerJs('$("#' . $this->id . '").yiiDynamicForm(' .$options .');', $view::POS_LOAD);
     }
 
     public function run()

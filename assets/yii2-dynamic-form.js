@@ -45,13 +45,21 @@
                 var $container = $(this);
 
                 var data = $container.data(pluginName);
-                if (!data){
+                if (!data) {
                     var settings = $.extend({}, defaults, options || {});
+
+                    settings.fields.forEach(function(attribute) {
+                        var yiiActiveFormAttribute = $("#" + settings.formId).yiiActiveForm("find", attribute.id.replace("{}", 0));
+                        if (yiiActiveFormAttribute !== undefined) {
+                           attribute.baseConfig = yiiActiveFormAttribute;
+                        }
+                    });
 
                     $container.data(pluginName, {
                         target : $container,
                         settings: settings
                     });
+
                     if ($container.find(settings.cloneButton).length) {
                         // add a click handler for the clone button
                         $container.on('click', settings.cloneButton, function(event) {
@@ -60,12 +68,21 @@
                             startClone(event, $(this), $container);
                         });
                     }
+
                     $container.on('click', settings.deleteButton, function(event) {
                         event.preventDefault();
                         removeItem($container, $(this));
                     });
-                }
 
+                    if ($container.find(settings.dynamicItem).length === 0) {
+                        settings.fields.forEach(function(attribute) {
+                            var id = attribute.id.replace("{}", 0);
+                            if ($("#" + settings.formId).yiiActiveForm("find", id) !== undefined) {
+                               $("#" + settings.formId).yiiActiveForm("remove", id);
+                            }
+                        });
+                    }
+                }
             });
         },
 
@@ -111,7 +128,7 @@
         $(config.dynamicItem).each(function(i) {
             config.fields.forEach(function(v) {
                 var id = v.id.replace("{}", i);
-                var attribute = $("#" + config.formId).yiiActiveForm("find", v.id.replace("{}", 0));
+                var attribute = v.baseConfig;
                 if (attribute !== undefined) {
                     attribute = $.extend(true, {}, attribute);
                     attribute.id = id;
@@ -139,7 +156,7 @@
             redoIDs($container);
             restoreSpecialJs($container);
             fixFormValidaton($container);
-            if (cloneCount > 1) {
+            if (cloneCount > 0) {
                 config.fields.forEach(function(v) {
                     var id = v.id.replace("{}", (cloneCount - 1));
                     if ($("#" + config.formId).yiiActiveForm("find", id) !== "undefined") {
