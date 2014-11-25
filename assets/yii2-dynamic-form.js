@@ -181,34 +181,34 @@
         var config = $container.data(pluginName).settings;
 
         // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(config.dynamicItems).find('[data-plugin-name=datepicker]');
+        var $hasDatepicker = $(config.dynamicItems).find('[data-krajee-datepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-plugin-options')));
+                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
             });
         }
 
         // "kartik-v/yii2-widget-timepicker"
-        var $hasTimepicker = $(config.dynamicItems).find('[data-plugin-name=timepicker]');
+        var $hasTimepicker = $(config.dynamicItems).find('[data-krajee-timepicker]');
         if ($hasTimepicker.length > 0) {
             $hasTimepicker.each(function() {
                 $(this).removeData().off();
                 $(this).parent().find('.bootstrap-timepicker-widget').remove();
                 $(this).unbind();
-                $(this).timepicker(eval($(this).attr('data-plugin-options')));
+                $(this).timepicker(eval($(this).attr('data-krajee-timepicker')));
             });
         }
 
         // "kartik-v/yii2-money"
-        var $hasMaskmoney = $(config.dynamicItems).find('[data-plugin-name=maskMoney]');
+        var $hasMaskmoney = $(config.dynamicItems).find('[data-krajee-maskMoney]');
         if ($hasMaskmoney.length > 0) {
             $hasMaskmoney.each(function() {
                 $(this).parent().find('input').removeData().off();
                 var id = '#' + $(this).attr('id');
                 var displayID  = id + '-disp';
                 $(displayID).maskMoney('destroy');
-                $(displayID).maskMoney(eval($(this).attr('data-plugin-options')));
+                $(displayID).maskMoney(eval($(this).attr('data-krajee-maskMoney')));
                 $(displayID).maskMoney('mask', parseFloat($(displayID).val()));
                 $(displayID).on('change', function () {
                     var numDecimal = $(displayID).maskMoney('unmasked')[0];
@@ -219,24 +219,24 @@
         }
 
         // "kartik-v/yii2-widget-fileinput"
-        var $hasFileinput = $(config.dynamicItems).find('[data-plugin-name=fileinput]');
+        var $hasFileinput = $(config.dynamicItems).find('[data-krajee-fileinput]');
         if ($hasFileinput.length > 0) {
             $hasFileinput.each(function() {
-                $(this).fileinput(eval($(this).attr('data-plugin-options')));
+                $(this).fileinput(eval($(this).attr('data-krajee-fileinput')));
             });
         }
 
         // "kartik-v/yii2-widget-touchspin"
-        var $hasTouchSpin = $(config.dynamicItems).find('[data-plugin-name=TouchSpin]');
+        var $hasTouchSpin = $(config.dynamicItems).find('[data-krajee-TouchSpin]');
         if ($hasTouchSpin.length > 0) {
             $hasTouchSpin.each(function() {
                 $(this).TouchSpin('destroy');
-                $(this).TouchSpin(eval($(this).attr('data-plugin-options')));
+                $(this).TouchSpin(eval($(this).attr('data-krajee-TouchSpin')));
             });
         }
 
         // "kartik-v/yii2-widget-colorinput"
-        var $hasSpectrum = $(config.dynamicItems).find('[data-plugin-name=spectrum]');
+        var $hasSpectrum = $(config.dynamicItems).find('[data-krajee-spectrum]');
         if ($hasSpectrum.length > 0) {
             $hasSpectrum.each(function() {
                 var id = '#' + $(this).attr('id');
@@ -244,7 +244,7 @@
                 $(sourceID).spectrum('destroy');
                 $(sourceID).unbind();
                 $(id).unbind();
-                var configSpectrum = eval($(this).attr('data-plugin-options'));
+                var configSpectrum = eval($(this).attr('data-krajee-spectrum'));
                 configSpectrum.change = function (color) {
                     jQuery(id).val(color.toString());
                 };
@@ -258,11 +258,11 @@
         }
 
         // "kartik-v/yii2-widget-select2"
-        var $hasSelect2 = $(config.dynamicItems).find('[data-plugin-name=select2]');
+        var $hasSelect2 = $(config.dynamicItems).find('[data-krajee-select2]');
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
-                var configSelect2 = eval($(this).attr('data-plugin-options'));
+                var configSelect2 = eval($(this).attr('data-krajee-select2'));
                 $(this).select2('destroy');
                 $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id));
                 $('#' + id).on('select2-open', function(){initSelect2DropStyle(id)});
@@ -270,12 +270,12 @@
         }
 
         // "kartik-v/yii2-widget-depdrop"
-        var $hasDepdrop = $(config.dynamicItems).find('[data-plugin-name=depdrop]');
+        var $hasDepdrop = $(config.dynamicItems).find('[data-krajee-depdrop]');
         if ($hasDepdrop.length > 0) {
             $hasDepdrop.each(function() {
                 $(this).removeData().off();
                 $(this).unbind();
-                var configDepdrop = eval($(this).attr('data-plugin-options'));
+                var configDepdrop = eval($(this).attr('data-krajee-depdrop'));
                 var inputID = $(this).attr('id');
                 var matchID = inputID.match(regex);
                 if (matchID && matchID.length === 4) {

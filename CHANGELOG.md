@@ -3,6 +3,7 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+- bug #8: Fixes to support the latest version of kartik-v widgets
 - bug: Fixed client validation
 - bug #6: Fixed settings for datepicker
 - enh: Added support for "kartik-v/yii2-widget-depdrop"
