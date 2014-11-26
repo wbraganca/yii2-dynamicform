@@ -14,7 +14,7 @@ use yii\helpers\Html;
 use yii\base\InvalidConfigException;
 
 /**
- * yii2-dynamicform is a jquery plugin to clone form elements in a nested manner, maintaining accessibility.
+ * yii2-dynamicform is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  */
