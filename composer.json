@@ -1,6 +1,6 @@
 {
 	"name": "wbraganca/yii2-dynamicform",
-	"description": "yii2-dynamicform is a jquery plugin to clone form elements in a nested manner, maintaining accessibility.",
+	"description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
 	"keywords": ["yii2", "extension", "widget", "yii2-dynamicform", "copy DOM element", "yii2 dynamic form"],
 	"type": "yii2-extension",
 	"license": "BSD-3-Clause",
