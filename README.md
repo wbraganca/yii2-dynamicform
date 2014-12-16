@@ -83,7 +83,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     <div class="panel-body">
                         <?php
                             // necessary for update action.
-                            if (!$modelAddress->isNewRecord) {
+                            if (! $modelAddress->isNewRecord) {
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
@@ -316,4 +316,108 @@ class Model extends \yii\base\Model
     }
 }
 
+```
+
+
+###To zero or more elements (use the following code in your view file)
+
+
+```php
+
+<?php
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use wbraganca\dynamicform\DynamicFormWidget;
+?>
+
+<div class="customer-form">
+
+    <?php $form = ActiveForm::begin(['id' => 'dynamic-form']); ?>
+    <div class="row">
+        <div class="col-sm-6">
+            <?= $form->field($modelCustomer, 'first_name')->textInput(['maxlength' => 32]) ?>
+        </div>
+        <div class="col-sm-6">
+            <?= $form->field($modelCustomer, 'last_name')->textInput(['maxlength' => 32]) ?>
+        </div>
+    </div>
+
+    <?php DynamicFormWidget::begin([
+        'dynamicItems' => '#form-addresses',
+        'dynamicItem' => '.form-addresses-item',
+        'model' => $modelsAddress[0],
+        'formId' => 'dynamic-form',
+        'formFields' => [
+            'full_name',
+            'address_line1',
+            'address_line2',
+            'city',
+            'state',
+            'postal_code',
+        ],
+        'options' => [
+            'min' => 0, // 0 or 1
+            'limit' => 4,
+        ]
+    ]); ?>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>
+                <i class="glyphicon glyphicon-envelope"></i> Addresses
+                <button type="button" class="clone btn btn-success btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i> Add</button>
+            </h4>
+        </div>
+        <div class="panel-body">
+            <div id="form-addresses">
+            <?php foreach ($modelsAddress as $i => $modelAddress): ?>
+                <div class="form-addresses-item panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title pull-left">Address</h3>
+                        <div class="pull-right">
+                            <button type="button" class="delete btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                            // necessary for update action.
+                            if (! $modelAddress->isNewRecord) {
+                                echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
+                            }
+                        ?>
+                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => 64]) ?>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => 128]) ?>
+                            </div>
+                            <div class="col-sm-6">
+                                <?= $form->field($modelAddress, "[{$i}]address_line2")->textInput(['maxlength' => 128]) ?>
+                            </div>
+                        </div><!-- .row -->
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <?= $form->field($modelAddress, "[{$i}]city")->textInput(['maxlength' => 64]) ?>
+                            </div>
+                            <div class="col-sm-4">
+                                <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => 32]) ?>
+                            </div>
+                            <div class="col-sm-4">
+                                <?= $form->field($modelAddress, "[{$i}]posal_code")->textInput(['maxlength' => 15]) ?>
+                            </div>
+                        </div><!-- .row -->
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            </div>
+        </div>
+    </div><!-- .panel -->
+    <?php DynamicFormWidget::end(); ?>
+
+    <div class="form-group">
+        <?= Html::submitButton($modelAddress->isNewRecord ? 'Create' : 'Update', ['class' => 'btn btn-primary']) ?>
+    </div>
+
+    <?php ActiveForm::end(); ?>
+
+</div>
 ```
