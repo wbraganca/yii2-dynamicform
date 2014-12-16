@@ -104,7 +104,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => 32]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]posal_code")->textInput(['maxlength' => 15]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => 15]) ?>
                             </div>
                         </div><!-- .row -->
                     </div>
@@ -402,7 +402,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => 32]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]posal_code")->textInput(['maxlength' => 15]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => 15]) ?>
                             </div>
                         </div><!-- .row -->
                     </div>
