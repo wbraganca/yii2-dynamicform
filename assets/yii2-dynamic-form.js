@@ -209,7 +209,7 @@
                 var displayID  = id + '-disp';
                 $(displayID).maskMoney('destroy');
                 $(displayID).maskMoney(eval($(this).attr('data-krajee-maskMoney')));
-                $(displayID).maskMoney('mask', parseFloat($(displayID).val()));
+                $(displayID).maskMoney('mask', parseFloat($(id).val()));
                 $(displayID).on('change', function () {
                     var numDecimal = $(displayID).maskMoney('unmasked')[0];
                     $(id).val(numDecimal);
