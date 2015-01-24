@@ -45,6 +45,10 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     public $formFields;
     /**
+     * @var array fields to be validated.
+     */
+    public $relatedFormFields;
+    /**
      * @var string
      */
     private $templateID;
@@ -102,6 +106,15 @@ class DynamicFormWidget extends \yii\base\Widget
                 'id' => Html::getInputId($this->model, '[{}]' . $field),
                 'name' => Html::getInputName($this->model, '[{}]' . $field)
             ];
+        }
+		foreach ($this->relatedFormFields as $related) {
+			$relatedModel = $related['model'];
+			foreach ($related['formFields'] as $relatedField) {
+				$this->options['fields'][] = [
+				   'id' => Html::getInputId($relatedModel, '[{}]' . $relatedField),
+				   'name' => Html::getInputName($relatedModel, '[{}]' . $relatedField)
+				];
+			}
         }
         $this->options['formId'] = $this->formId;
         $options = Json::encode($this->options);
