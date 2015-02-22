@@ -21,17 +21,33 @@ use yii\base\InvalidConfigException;
 class DynamicFormWidget extends \yii\base\Widget
 {
     /**
-     * @var array
+     * @var string
      */
-    public $options = [];
+    public $widgetContainer;
+     /**
+     * @var string
+     */
+    public $widgetBody;
     /**
      * @var string
      */
-    public $dynamicItems;
+    public $widgetItem;
     /**
      * @var string
      */
-    public $dynamicItem;
+    public $limit = 999;
+    /**
+     * @var string
+     */
+    public $insertButton;
+     /**
+     * @var string
+     */
+    public $deleteButton;
+    /**
+     * @var string 'bottom' or 'top';
+     */
+    public $insertPosition = 'bottom';
      /**
      * @var Model|ActiveRecord the model used for the form
      */
@@ -45,9 +61,17 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     public $formFields;
     /**
+     * @var integer
+     */
+    public $min = 1;
+    /**
      * @var string
      */
-    private $templateID;
+    private $_options;
+    /**
+     * @var string
+     */
+    private $_insertPositions = ['bottom', 'top'];
 
     /**
      * Initializes the widget
@@ -57,17 +81,24 @@ class DynamicFormWidget extends \yii\base\Widget
     public function init()
     {
         parent::init();
-        if (empty($this->dynamicItems)) {
-            throw new InvalidConfigException("The 'dynamicItems' property must be set.");
+        if (empty($this->widgetContainer) || (preg_match('/^\w{1,}$/', $this->widgetContainer) === 0)) {
+            throw new InvalidConfigException('Invalid configuration to property "widgetContainer". 
+                Allowed only alphanumeric characters plus underline: [A-Za-z0-9_]');
         }
-        if (empty($this->dynamicItem)) {
-            throw new InvalidConfigException("The 'dynamicItem' property must be set.");
+        if (empty($this->widgetBody)) {
+            throw new InvalidConfigException("The 'widgetBody' property must be set.");
+        }
+        if (empty($this->widgetItem)) {
+            throw new InvalidConfigException("The 'widgetItem' property must be set.");
         }
         if (empty($this->model) || !$this->model instanceof \yii\base\Model) {
             throw new InvalidConfigException("The 'model' property must be set and must extend from '\\yii\\base\\Model'.");
         }
         if (empty($this->formId)) {
             throw new InvalidConfigException("The 'formId' property must be set.");
+        }
+        if (empty($this->insertPosition) || ! in_array($this->insertPosition, $this->_insertPositions)) {
+            throw new InvalidConfigException("Invalid configuration to property 'insertPosition' (allowed values: 'bottom' or 'top')");
         }
         if (empty($this->formFields) || !is_array($this->formFields)) {
             throw new InvalidConfigException("The 'formFields' property must be set.");
@@ -80,8 +111,24 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     protected function initOptions()
     {
-        $this->templateID = 'template-' . $this->id;
-        $this->registerAssets();
+        $this->_options['widgetContainer'] = $this->widgetContainer;
+        $this->_options['widgetBody']      = $this->widgetBody;
+        $this->_options['widgetItem']      = $this->widgetItem;
+        $this->_options['limit']           = $this->limit;
+        $this->_options['insertButton']    = $this->insertButton;
+        $this->_options['deleteButton']    = $this->deleteButton;
+        $this->_options['insertPosition']  = $this->insertPosition;
+        $this->_options['formId']          = $this->formId;
+        $this->_options['min']             = $this->min;
+        $this->_options['fields']          = [];
+
+        foreach ($this->formFields as $field) {
+             $this->_options['fields'][] = [
+                'id' => Html::getInputId($this->model, '[{}]' . $field),
+                'name' => Html::getInputName($this->model, '[{}]' . $field)
+            ];
+        }
+
         ob_start();
         ob_implicit_flush(false);
     }
@@ -93,19 +140,8 @@ class DynamicFormWidget extends \yii\base\Widget
     {
         $view = $this->getView();
         DynamicFormAsset::register($view);
-        $this->options['dynamicItems'] = $this->dynamicItems;
-        $this->options['dynamicItem'] = $this->dynamicItem;
-        $this->options['template'] = '#' . $this->templateID;
-        $this->options['fields'] = [];
-        foreach ($this->formFields as $field) {
-             $this->options['fields'][] = [
-                'id' => Html::getInputId($this->model, '[{}]' . $field),
-                'name' => Html::getInputName($this->model, '[{}]' . $field)
-            ];
-        }
-        $this->options['formId'] = $this->formId;
-        $options = Json::encode($this->options);
-        $view->registerJs('$("#' . $this->id . '").yiiDynamicForm(' .$options .');', $view::POS_LOAD);
+        $options = Json::encode($this->_options);
+        $view->registerJs('$(".' . $this->widgetContainer . '").yiiDynamicForm(' .$options .');', $view::POS_LOAD);
     }
 
     public function run()
@@ -113,16 +149,17 @@ class DynamicFormWidget extends \yii\base\Widget
         $content = ob_get_clean();
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $results = $crawler->filter($this->dynamicItem);
+        $results = $crawler->filter($this->widgetItem);
         $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
-        $htmlFirstItem = "\n" . trim($document->saveHTML())."\n";
-        $template = Html::tag('template', $htmlFirstItem, ['id' => $this->templateID, 'style' => 'display: none;']);
-        if (isset($this->options['min']) && $this->options['min'] === 0 && $this->model->isNewRecord) {
+        $this->_options['template'] = trim($document->saveHTML());
+
+        if (isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord) {
             $content = $this->removeItems($content);
         }
-        $output =  $content . $template . "\n";
-        echo Html::tag('div', $output, ['id' => $this->id]);
+
+        $this->registerAssets();
+        echo Html::tag('div', $content, ['class' => $this->widgetContainer, 'data-dynamicform' => $this->widgetContainer]);
     }
 
     private function removeItems($content)
@@ -134,8 +171,8 @@ class DynamicFormWidget extends \yii\base\Widget
         $crawler->rewind();
         $root->appendChild($document->importNode($crawler->current(), true));
         $domxpath = new \DOMXPath($document);
+        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->widgetItem));
 
-        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->dynamicItem));
         foreach ($crawlerInverse as $elementToRemove) {
             $parent = $elementToRemove->parentNode;
             $parent->removeChild($elementToRemove);

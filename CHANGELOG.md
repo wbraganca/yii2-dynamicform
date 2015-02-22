@@ -5,6 +5,14 @@ dev-master
 ----------
 
 
+version 2.0.0
+-------------
+**Date:** 22-Fev-2015
+- enh #20: Added trigger 'beforeDelete'
+- bug #19: Fixes checkboxes on new items
+- enh #15: Added support for multiple nested widgets
+
+
 version 1.1.0
 -------------
 **Date:** 16-Dez-2014

@@ -1,6 +1,7 @@
 yii2-dynamicform
 ===================
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
+![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform-2.0.0.jpg)
 
 Installation
 ------------
@@ -22,7 +23,7 @@ or add
 to the require section of your `composer.json` file.
 
 
-How to use
+Usage
 ----------
 ###Hypothetical Scenario
 ![Database](http://wbraganca.com/img/yii2-dynamicform-db.png)
@@ -51,9 +52,14 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <div class="panel panel-default">
         <div class="panel-heading"><h4><i class="glyphicon glyphicon-envelope"></i> Addresses</h4></div>
         <div class="panel-body">
-            <?php DynamicFormWidget::begin([
-                'dynamicItems' => '#form-addresses',
-                'dynamicItem' => '.form-addresses-item',
+             <?php DynamicFormWidget::begin([
+                'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+                'widgetBody' => '.container-items', // required: css class selector
+                'widgetItem' => '.item', // required: css class
+                'limit' => 4, // the maximum times, an element can be cloned (default 999)
+                'min' => 1, // 0 or 1 (default 1)
+                'insertButton' => '.add-item', // css class
+                'deleteButton' => '.remove-item', // css class
                 'model' => $modelsAddress[0],
                 'formId' => 'dynamic-form',
                 'formFields' => [
@@ -64,19 +70,16 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     'state',
                     'postal_code',
                 ],
-                'options' => [
-                    'limit' => 4, // the maximum times, an element can be cloned (default 999)
-                ]
             ]); ?>
 
-            <div id="form-addresses">
+            <div class="container-items"><!-- widgetContainer -->
             <?php foreach ($modelsAddress as $i => $modelAddress): ?>
-                <div class="form-addresses-item panel panel-default">
+                <div class="item panel panel-default"><!-- widgetBody -->
                     <div class="panel-heading">
                         <h3 class="panel-title pull-left">Address</h3>
                         <div class="pull-right">
-                            <button type="button" class="clone btn btn-success btn-xs"><i class="glyphicon glyphicon-plus"></i></button>
-                            <button type="button" class="delete btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
+                            <button type="button" class="add-item btn btn-success btn-xs"><i class="glyphicon glyphicon-plus"></i></button>
+                            <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -122,10 +125,39 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?php ActiveForm::end(); ?>
 
 </div>
+```
+
+###Javascript Events
+
+```javascript
+
+$(".dynamicform_wrapper").on("beforeInsert", function(e, item) {
+    console.log("beforeInsert");
+});
+
+$(".dynamicform_wrapper").on("afterInsert", function(e, item) {
+    console.log("afterInsert");
+});
+
+$(".dynamicform_wrapper").on("beforeDelete", function(e, item) {
+    if (! confirm("Are you sure you want to delete this item?")) {
+        return false;
+    }
+    return true;
+});
+
+$(".dynamicform_wrapper").on("afterDelete", function(e) {
+    console.log("Deleted item!");
+});
+
+$(".dynamicform_wrapper").on("limitReached", function(e, item) {
+    alert("Limit reached");
+});
 
 ```
 
-###The Controller
+
+###The Controller (sample code)
 
 ```php
 <?php
@@ -343,8 +375,13 @@ use wbraganca\dynamicform\DynamicFormWidget;
     </div>
 
     <?php DynamicFormWidget::begin([
-        'dynamicItems' => '#form-addresses',
-        'dynamicItem' => '.form-addresses-item',
+        'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
+        'widgetBody' => '.container-items', // required: css class selector
+        'widgetItem' => '.item', // required: css class
+        'limit' => 4, // the maximum times, an element can be added (default 999)
+        'min' => 0, // 0 or 1 (default 1)
+        'insertButton' => '.add-item', // css class
+        'deleteButton' => '.remove-item', // css class
         'model' => $modelsAddress[0],
         'formId' => 'dynamic-form',
         'formFields' => [
@@ -355,26 +392,23 @@ use wbraganca\dynamicform\DynamicFormWidget;
             'state',
             'postal_code',
         ],
-        'options' => [
-            'min' => 0, // 0 or 1
-            'limit' => 4,
-        ]
     ]); ?>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h4>
                 <i class="glyphicon glyphicon-envelope"></i> Addresses
-                <button type="button" class="clone btn btn-success btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i> Add</button>
+                <button type="button" class="add-item btn btn-success btn-sm pull-right"><i class="glyphicon glyphicon-plus"></i> Add</button>
             </h4>
         </div>
         <div class="panel-body">
-            <div id="form-addresses">
+            <div class="container-items"><!-- widgetBody -->
             <?php foreach ($modelsAddress as $i => $modelAddress): ?>
-                <div class="form-addresses-item panel panel-default">
+                <div class="item panel panel-default"><!-- widgetItem -->
                     <div class="panel-heading">
                         <h3 class="panel-title pull-left">Address</h3>
                         <div class="pull-right">
-                            <button type="button" class="delete btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
+                            <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus"></i></button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
