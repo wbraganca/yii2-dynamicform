@@ -5,6 +5,12 @@ dev-master
 ----------
 
 
+version 2.0.1
+-------------
+**Date:** 23-Fev-2015
+- bug: Fixed error for the use of multiple nested widgets with zero initial elements
+
+
 version 2.0.0
 -------------
 **Date:** 22-Fev-2015

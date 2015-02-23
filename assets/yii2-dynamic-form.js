@@ -32,52 +32,36 @@
     };
 
     var methods = {
-        init: function (settings) {
+        init: function (widgetOptions) {
             return this.each(function () {
-                var $this = $(this);
-                var widgetData = {};
-
-                if ($('body').data(pluginName) !== undefined) {
-                    widgetData = $('body').data(pluginName);
-                }
-
-                if (widgetData[settings.widgetContainer] === undefined) {
-                    widgetData = (widgetData[settings.widgetContainer] = settings, widgetData);
-                    settings.template = _parseTemplate(settings);
-
-                    $('body').data(pluginName, widgetData);
-
-                    // add a click handler for the clone button
-                    $('#' + settings.formId).on('click', settings.insertButton, function(e) {
-                        e.preventDefault();
-                        $('.' + settings.widgetContainer).triggerHandler(events.beforeInsert, [$(this)]);
-                        _addItem(settings.widgetContainer, e, $(this));
-                    });
-
-                    // add a click handler for the remove button
-                    $('#' + settings.formId).on('click', settings.deleteButton, function(e) {
-                        e.preventDefault();
-                        _deleteItem(settings.widgetContainer, e, $(this));
-                    });
-                }
+                widgetOptions.template = _parseTemplate(widgetOptions);
             });
         },
 
+        addItem: function (widgetOptions, e, $elem) {
+           _addItem(widgetOptions, e, $elem);
+        },
+
+        deleteItem: function (widgetOptions, e, $elem) {
+           _deleteItem(widgetOptions, e, $elem);
+        },
+
         updateContainer: function () {
-            var widgetContainer = $(this).attr('data-dynamicform');
-            _updateAttributes(widgetContainer);
-            _restoreSpecialJs(widgetContainer);
-            _fixFormValidaton(widgetContainer);
+            var widgetOptions = eval($(this).attr('data-dynamicform'));
+            _updateAttributes(widgetOptions);
+            _restoreSpecialJs(widgetOptions);
+            _fixFormValidaton(widgetOptions);
         }
     };
 
-    var _parseTemplate = function(settings) {
-        var $template = $(settings.template);
+    var _parseTemplate = function(widgetOptions) {
+        var $template = $(widgetOptions.template);
+
         $template.find('div[data-dynamicform]').each(function(){
-            var widgetData = $('body').data(pluginName)[$(this).attr('data-dynamicform')];
-            if ($(widgetData.widgetItem).length > 1) {
-                var item = $(this).find(widgetData.widgetItem).first()[0].outerHTML;
-                $(this).find(widgetData.widgetBody).html(item);
+            var widgetOptions = eval($(this).attr('data-dynamicform'));
+            if ($(widgetOptions.widgetItem).length > 1) {
+                var item = $(this).find(widgetOptions.widgetItem).first()[0].outerHTML;
+                $(this).find(widgetOptions.widgetBody).html(item);
             }
         });
 
@@ -97,10 +81,8 @@
         return $template;
     };
 
-    var _getDataWidgetRoot = function(widgetContainer) {
-        var widgetData = $('body').data(pluginName)[widgetContainer];
-        var widgetContainerRoot = $(widgetData.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform');
-        return $('body').data(pluginName)[widgetContainerRoot];
+    var _getWidgetOptionsRoot = function(widgetOptions) {
+        return eval($(widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
     };
 
     var _getLevel = function($elem) {
@@ -109,95 +91,92 @@
         return level;
     };
 
-    var _count = function($elem, widgetContainer) {
-        var widgetData = $('body').data(pluginName)[widgetContainer];
-        return $elem.closest('.' + widgetContainer).find(widgetData.widgetItem).length;
+    var _count = function($elem, widgetOptions) {
+        return $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetItem).length;
     };
 
     var _creatIdentifiers = function(level) {
         return new Array(level + 2).join('0').split('');
     };
 
-    var _addItem = function(widgetContainer, e, $elem) {
-        var widgetData = $('body').data(pluginName)[widgetContainer];
-        var count = _count($elem, widgetContainer);
+    var _addItem = function(widgetOptions, e, $elem) {
+        var count = _count($elem, widgetOptions);
 
-        if (count < widgetData.limit) {
-            $toclone = widgetData.template;
+        if (count < widgetOptions.limit) {
+            $toclone = widgetOptions.template;
             $newclone = $toclone.clone(false, false);
 
-            if (widgetData.insertPosition === 'top') {
-                $elem.closest('.' + widgetData.widgetContainer).find(widgetData.widgetBody).prepend($newclone);
+            if (widgetOptions.insertPosition === 'top') {
+                $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetBody).prepend($newclone);
             } else {
-                $elem.closest('.' + widgetData.widgetContainer).find(widgetData.widgetBody).append($newclone);
+                $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetBody).append($newclone);
             }
 
-            _updateAttributes(widgetContainer);
-            _restoreSpecialJs(widgetContainer);
-            _fixFormValidaton(widgetContainer);
-            $elem.closest('.' + widgetContainer).triggerHandler(events.afterInsert, $newclone);
+            _updateAttributes(widgetOptions);
+            _restoreSpecialJs(widgetOptions);
+            _fixFormValidaton(widgetOptions);
+            $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.afterInsert, $newclone);
         } else {
             // trigger a custom event for hooking
-            $elem.closest('.' + widgetContainer).triggerHandler(events.limitReached, widgetData.limit);
+            $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.limitReached, widgetOptions.limit);
         }
     };
 
-    var _removeValidations = function($elem, widgetData, count) {
+    var _removeValidations = function($elem, widgetOptions, count) {
         if (count > 1) {
             $elem.find('div[data-dynamicform]').each(function() {
-                var currentAttrData = $('body').data(pluginName)[$(this).attr('data-dynamicform')];
+                var currentWidgetOptions = eval($(this).attr('data-dynamicform'));
                 var level           = _getLevel($(this));
                 var identifiers     = _creatIdentifiers(level);
-                var numItems        = $(this).find(currentAttrData.widgetItem).length;
+                var numItems        = $(this).find(currentWidgetOptions.widgetItem).length;
 
                 for (var i = 1; i <= numItems -1; i++) {
                     var aux = identifiers;
                     aux[level] = i;
-                    currentAttrData.fields.forEach(function(input) {
+                    currentWidgetOptions.fields.forEach(function(input) {
                         var id = input.id.replace("{}", aux.join('-'));
-                        if ($("#" + currentAttrData.formId).yiiActiveForm("find", id) !== "undefined") {
-                            $("#" + currentAttrData.formId).yiiActiveForm("remove", id);
+                        if ($("#" + currentWidgetOptions.formId).yiiActiveForm("find", id) !== "undefined") {
+                            $("#" + currentWidgetOptions.formId).yiiActiveForm("remove", id);
                         }
                     });
                 }
             });
 
-            var level          = _getLevel($elem.closest('.' + widgetData.widgetContainer));
-            var rootData       = _getDataWidgetRoot(widgetData.widgetContainer);
+            var level          = _getLevel($elem.closest('.' + widgetOptions.widgetContainer));
+            var widgetOptionsRoot       = _getWidgetOptionsRoot(widgetOptions);
             var identifiers    = _creatIdentifiers(level);
-            identifiers[0]     = $(rootData.widgetItem).length - 1;
+            identifiers[0]     = $(widgetOptionsRoot.widgetItem).length - 1;
             identifiers[level] = count - 1;
 
-            widgetData.fields.forEach(function(input) {
+            widgetOptions.fields.forEach(function(input) {
                 var id = input.id.replace("{}", identifiers.join('-'));
-                if ($("#" + widgetData.formId).yiiActiveForm("find", id) !== "undefined") {
-                    $("#" + widgetData.formId).yiiActiveForm("remove", id);
+                if ($("#" + widgetOptions.formId).yiiActiveForm("find", id) !== "undefined") {
+                    $("#" + widgetOptions.formId).yiiActiveForm("remove", id);
                 }
             });
         }
     };
 
-    var _deleteItem = function(widgetContainer, e, $elem) {
-        var widgetData = $('body').data(pluginName)[widgetContainer];
-        var count = _count($elem, widgetContainer);
+    var _deleteItem = function(widgetOptions, e, $elem) {
+        var count = _count($elem, widgetOptions);
 
-        if (count > widgetData.min) {
-            $todelete = $elem.closest(widgetData.widgetItem);
+        if (count > widgetOptions.min) {
+            $todelete = $elem.closest(widgetOptions.widgetItem);
 
             // trigger a custom event for hooking
-            var eventResult = $('.' + widgetData.widgetContainer).triggerHandler(events.beforeDelete, $todelete);
+            var eventResult = $('.' + widgetOptions.widgetContainer).triggerHandler(events.beforeDelete, $todelete);
             if (eventResult !== false) {
-                _removeValidations($todelete, widgetData, count);
+                _removeValidations($todelete, widgetOptions, count);
                 $todelete.remove();
-                _updateAttributes(widgetContainer);
-                _restoreSpecialJs(widgetContainer);
-                _fixFormValidaton(widgetContainer);
-                $('.' + widgetData.widgetContainer).triggerHandler(events.afterDelete);
+                _updateAttributes(widgetOptions);
+                _restoreSpecialJs(widgetOptions);
+                _fixFormValidaton(widgetOptions);
+                $('.' + widgetOptions.widgetContainer).triggerHandler(events.afterDelete);
             }
         }
     };
 
-    var _updateAttrID = function($item, $elem, index, currentAttrData, level) {
+    var _updateAttrID = function(widgetOptions, $elem, index, level) {
         var id = $elem.attr('id');
         var newID = id;
 
@@ -210,7 +189,7 @@
                 identifiers[0] = index;
 
                 if (level > 0 && identifiers[level] !== undefined) {
-                    identifiers[level] = $elem.closest(currentAttrData.widgetItem).index();
+                    identifiers[level] = $elem.closest(widgetOptions.widgetItem).index();
                 }
 
                 newID = matches[1] + '-' + identifiers.join('-') + '-' + matches[3];
@@ -222,17 +201,17 @@
         }
 
         if (id !== newID) {
-            $item.find('.field-' + id).each(function() {
+            $elem.closest(widgetOptions.widgetItem).find('.field-' + id).each(function() {
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest($item).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
         }
 
         return newID;
     };
 
-    var _updateAttrName = function($item, $elem, index, currentAttrData, level) {
+    var _updateAttrName = function(widgetOptions, $elem, index, level) {
         var name = $elem.attr('name');
 
         if (name !== undefined) {
@@ -244,7 +223,7 @@
                 identifiers[0] = index;
 
                 if (level > 0 && identifiers[level] !== undefined) {
-                    identifiers[level] = $elem.closest(currentAttrData.widgetItem).index();
+                    identifiers[level] = $elem.closest(widgetOptions.widgetItem).index();
                 }
 
                 name = matches[1] + '[' + identifiers.join('][') + ']' + matches[3];
@@ -255,32 +234,31 @@
         return name;
     };
 
-    var _updateAttributes = function(widgetContainer) {
-        var rootData = _getDataWidgetRoot(widgetContainer);
+    var _updateAttributes = function(widgetOptions) {
+        var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(rootData.widgetItem).each(function(index) {
+        $(widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
             var level = 0;
-            var currentAttrData = rootData;
+            var currentWidgetOptions = widgetOptionsRoot;
 
             $(this).find('*').each(function() {
                 if ($(this).attr('data-dynamicform') !== undefined) {
-                    currentAttrData = $('body').data(pluginName)[$(this).attr('data-dynamicform')];
+                    currentWidgetOptions = eval($(this).attr('data-dynamicform'));
                     level = _getLevel($(this));
                 }
 
                 // update "id" attribute
-                _updateAttrID($item, $(this), index, currentAttrData, level);
+                _updateAttrID(currentWidgetOptions, $(this), index, level);
 
                 // update "name" attribute
-                _updateAttrName($item, $(this), index, currentAttrData, level);
+                _updateAttrName(currentWidgetOptions, $(this), index, level);
             });
         });
     };
 
-    var _fixFormValidatonInput = function(widgetData, input, index, id, name) {
+    var _fixFormValidatonInput = function(widgetOptions, input, index, id, name) {
         var attribute = input.baseConfig;
-
         if (attribute !== undefined) {
             attribute = $.extend(true, {}, attribute);
             attribute.id = id;
@@ -290,57 +268,58 @@
             attribute.value = $("#" + id).val();
             attribute.status = 0;
 
-            if ($("#" + widgetData.formId).yiiActiveForm("find", id) !== "undefined") {
-                $("#" + widgetData.formId).yiiActiveForm("remove", id);
+            if ($("#" + widgetOptions.formId).yiiActiveForm("find", id) !== "undefined") {
+                $("#" + widgetOptions.formId).yiiActiveForm("remove", id);
             }
 
-            $("#" + widgetData.formId).yiiActiveForm("add", attribute);
+            $("#" + widgetOptions.formId).yiiActiveForm("add", attribute);
         }
     };
 
-    var _fixFormValidatonInputs = function(widgetData, level, index, i) {
-         widgetData.fields.forEach(function(input) {
+    var _fixFormValidatonInputs = function(widgetOptions, level, index, i) {
+         widgetOptions.fields.forEach(function(input) {
             var identifiers    = _creatIdentifiers(level);
-            var yiiActiveFormAttribute = $("#" + widgetData.formId).yiiActiveForm("find", input.id.replace("{}", identifiers.join('-')));
-
+            var yiiActiveFormAttribute = $("#" + widgetOptions.formId).yiiActiveForm("find", input.id.replace("{}", identifiers.join('-')));
             if (yiiActiveFormAttribute !== undefined) {
-                input.baseConfig       = yiiActiveFormAttribute;
+                input.baseConfig   = yiiActiveFormAttribute;
                 identifiers[0]     = index;
                 identifiers[level] = i;
                 var id             = input.id.replace("{}", identifiers.join('-'));
                 var name           = input.name.replace("{}", identifiers.join(']['));
-                _fixFormValidatonInput(widgetData, input, i, id, name);
+
+                _fixFormValidatonInput(widgetOptions, input, i, id, name);
             }
         });
     };
 
-    var _fixFormValidaton = function(widgetContainer) {
-        var rootData = _getDataWidgetRoot(widgetContainer);
+    var _fixFormValidaton = function(widgetOptions) {
+        var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(rootData.widgetItem).each(function(index) {
+        $(widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
             var level = 0;
-            var currentAttrData = rootData;
-            _fixFormValidatonInputs(rootData, level, index, index);
+            var currentWidgetOptions = widgetOptionsRoot;
+            _fixFormValidatonInputs(widgetOptionsRoot, level, index, index);
 
             $(this).find('div[data-dynamicform]').each(function() {
-                currentAttrData = $('body').data(pluginName)[$(this).attr('data-dynamicform')];
+                currentWidgetOptions = eval($(this).attr('data-dynamicform'));
                 level = _getLevel($(this));
 
                 if (level > 0) {
-                    $(this).find(currentAttrData.widgetItem).each(function(i) {
-                         _fixFormValidatonInputs(currentAttrData, level, index, i);
+                    $(this).find(currentWidgetOptions.widgetItem).each(function(i) {
+
+                         _fixFormValidatonInputs(currentWidgetOptions, level, index, i);
                     });
                 }
             });
         });
     };
 
-    var _restoreSpecialJs = function(widgetContainer) {
-        var rootData = _getDataWidgetRoot(widgetContainer);
+    var _restoreSpecialJs = function(widgetOptions) {
+        var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
         // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(rootData.widgetItem).find('[data-krajee-datepicker]');
+        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().datepicker('remove');
@@ -349,7 +328,7 @@
         }
 
         // "kartik-v/yii2-widget-timepicker"
-        var $hasTimepicker = $(rootData.widgetItem).find('[data-krajee-timepicker]');
+        var $hasTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-timepicker]');
         if ($hasTimepicker.length > 0) {
             $hasTimepicker.each(function() {
                 $(this).removeData().off();
@@ -360,7 +339,7 @@
         }
 
         // "kartik-v/yii2-money"
-        var $hasMaskmoney = $(rootData.widgetItem).find('[data-krajee-maskMoney]');
+        var $hasMaskmoney = $(widgetOptionsRoot.widgetItem).find('[data-krajee-maskMoney]');
         if ($hasMaskmoney.length > 0) {
             $hasMaskmoney.each(function() {
                 $(this).parent().find('input').removeData().off();
@@ -378,7 +357,7 @@
         }
 
         // "kartik-v/yii2-widget-fileinput"
-        var $hasFileinput = $(rootData.widgetItem).find('[data-krajee-fileinput]');
+        var $hasFileinput = $(widgetOptionsRoot.widgetItem).find('[data-krajee-fileinput]');
         if ($hasFileinput.length > 0) {
             $hasFileinput.each(function() {
                 $(this).fileinput(eval($(this).attr('data-krajee-fileinput')));
@@ -386,7 +365,7 @@
         }
 
         // "kartik-v/yii2-widget-touchspin"
-        var $hasTouchSpin = $(rootData.widgetItem).find('[data-krajee-TouchSpin]');
+        var $hasTouchSpin = $(widgetOptionsRoot.widgetItem).find('[data-krajee-TouchSpin]');
         if ($hasTouchSpin.length > 0) {
             $hasTouchSpin.each(function() {
                 $(this).TouchSpin('destroy');
@@ -395,7 +374,7 @@
         }
 
         // "kartik-v/yii2-widget-colorinput"
-        var $hasSpectrum = $(rootData.widgetItem).find('[data-krajee-spectrum]');
+        var $hasSpectrum = $(widgetOptionsRoot.widgetItem).find('[data-krajee-spectrum]');
         if ($hasSpectrum.length > 0) {
             $hasSpectrum.each(function() {
                 var id = '#' + $(this).attr('id');
@@ -417,7 +396,7 @@
         }
 
         // "kartik-v/yii2-widget-depdrop"
-        var $hasDepdrop = $(rootData.widgetItem).find('[data-krajee-depdrop]');
+        var $hasDepdrop = $(widgetOptionsRoot.widgetItem).find('[data-krajee-depdrop]');
         if ($hasDepdrop.length > 0) {
             $hasDepdrop.each(function() {
                 $(this).removeData().off();
@@ -438,7 +417,7 @@
         }
 
         // "kartik-v/yii2-widget-select2"
-        var $hasSelect2 = $(rootData.widgetItem).find('[data-krajee-select2]');
+        var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');

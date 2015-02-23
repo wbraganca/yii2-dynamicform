@@ -20,6 +20,7 @@ use yii\base\InvalidConfigException;
  */
 class DynamicFormWidget extends \yii\base\Widget
 {
+    const HASH_VAR_BASE_NAME = 'dynamicform_';
     /**
      * @var string
      */
@@ -72,6 +73,10 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     private $_insertPositions = ['bottom', 'top'];
+    /**
+     * @var string the hashed global variable name storing the pluginOptions
+     */
+    private $_hashVar;
 
     /**
      * Initializes the widget
@@ -133,6 +138,13 @@ class DynamicFormWidget extends \yii\base\Widget
         ob_implicit_flush(false);
     }
 
+    protected function registerOptions($view)
+    {
+        $encOptions = Json::encode($this->_options);
+        $this->_hashVar = DynamicFormWidget::HASH_VAR_BASE_NAME . hash('crc32', $encOptions);
+        $view->registerJs("var {$this->_hashVar} = {$encOptions};\n", $view::POS_HEAD);
+    }
+
     /**
      * Registers the needed assets
      */
@@ -141,7 +153,25 @@ class DynamicFormWidget extends \yii\base\Widget
         $view = $this->getView();
         DynamicFormAsset::register($view);
         $options = Json::encode($this->_options);
-        $view->registerJs('$(".' . $this->widgetContainer . '").yiiDynamicForm(' .$options .');', $view::POS_LOAD);
+        $this->registerOptions($view);
+
+        $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
+        $view->registerJs($js, $view::POS_READY);
+
+        // add a click handler for the clone button
+        $js = 'jQuery("#' . $this->formId . '").on("click", "' . $this->insertButton . '", function(e) {'. "\n";
+        $js .= "    e.preventDefault();\n";
+        $js .= '    jQuery(".' .  $this->widgetContainer . '").triggerHandler("beforeInsert", [jQuery(this)]);' . "\n";
+        $js .= '    jQuery(".' .  $this->widgetContainer . '").yiiDynamicForm("addItem", '. $this->_hashVar . ", e, jQuery(this));\n";
+        $js .= "});\n";
+        $view->registerJs($js, $view::POS_READY);
+
+        // add a click handler for the remove button
+        $js = 'jQuery("#' . $this->formId . '").on("click", "' . $this->deleteButton . '", function(e) {'. "\n";
+        $js .= "    e.preventDefault();\n";
+        $js .= '    jQuery(".' .  $this->widgetContainer . '").yiiDynamicForm("deleteItem", '. $this->_hashVar . ", e, jQuery(this));\n";
+        $js .= "});\n";
+        $view->registerJs($js, $view::POS_READY);
     }
 
     public function run()
@@ -159,7 +189,7 @@ class DynamicFormWidget extends \yii\base\Widget
         }
 
         $this->registerAssets();
-        echo Html::tag('div', $content, ['class' => $this->widgetContainer, 'data-dynamicform' => $this->widgetContainer]);
+        echo Html::tag('div', $content, ['class' => $this->widgetContainer, 'data-dynamicform' => $this->_hashVar]);
     }
 
     private function removeItems($content)
