@@ -55,8 +55,8 @@
     };
 
     var _parseTemplate = function(widgetOptions) {
-        var $template = $(widgetOptions.template);
 
+        var $template = $(widgetOptions.template);
         $template.find('div[data-dynamicform]').each(function(){
             var widgetOptions = eval($(this).attr('data-dynamicform'));
             if ($(widgetOptions.widgetItem).length > 1) {
@@ -69,7 +69,7 @@
             $(this).val('');
         });
 
-        $template.find('input[type="checkbox"]').each(function() {
+        $template.find('input[type="checkbox"], input[type="radio"]').each(function() {
             var inputName = $(this).attr('name');
             var $inputHidden = $template.find('input[type="hidden"][name="' + inputName + '"]').first();
             if ($inputHidden) {
@@ -95,7 +95,7 @@
         return $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetItem).length;
     };
 
-    var _creatIdentifiers = function(level) {
+    var _createIdentifiers = function(level) {
         return new Array(level + 2).join('0').split('');
     };
 
@@ -127,7 +127,7 @@
             $elem.find('div[data-dynamicform]').each(function() {
                 var currentWidgetOptions = eval($(this).attr('data-dynamicform'));
                 var level           = _getLevel($(this));
-                var identifiers     = _creatIdentifiers(level);
+                var identifiers     = _createIdentifiers(level);
                 var numItems        = $(this).find(currentWidgetOptions.widgetItem).length;
 
                 for (var i = 1; i <= numItems -1; i++) {
@@ -144,7 +144,7 @@
 
             var level          = _getLevel($elem.closest('.' + widgetOptions.widgetContainer));
             var widgetOptionsRoot       = _getWidgetOptionsRoot(widgetOptions);
-            var identifiers    = _creatIdentifiers(level);
+            var identifiers    = _createIdentifiers(level);
             identifiers[0]     = $(widgetOptionsRoot.widgetItem).length - 1;
             identifiers[level] = count - 1;
 
@@ -176,20 +176,28 @@
         }
     };
 
-    var _updateAttrID = function(widgetOptions, $elem, index, level) {
-        var id = $elem.attr('id');
-        var newID = id;
+    var _updateAttrID = function($elem, index) {
+        var widgetOptions = eval($elem.closest('div[data-dynamicform]').attr('data-dynamicform'));
+        var id            = $elem.attr('id');
+        var newID         = id;
 
         if (id !== undefined) {
             var matches = id.match(regexID);
-
             if (matches && matches.length === 4) {
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
+                
+                if (identifiers.length > 1) {
+                    var widgetsOptions = [];
+                    $elem.parents('div[data-dynamicform]').each(function(i){
+                        widgetsOptions[i] = eval($(this).attr('data-dynamicform'));
+                    });
 
-                if (level > 0 && identifiers[level] !== undefined) {
-                    identifiers[level] = $elem.closest(widgetOptions.widgetItem).index();
+                    widgetsOptions = widgetsOptions.reverse();
+                    for (var i = identifiers.length - 1; i >= 1; i--) {
+                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                    }
                 }
 
                 newID = matches[1] + '-' + identifiers.join('-') + '-' + matches[3];
@@ -211,7 +219,7 @@
         return newID;
     };
 
-    var _updateAttrName = function(widgetOptions, $elem, index, level) {
+    var _updateAttrName = function($elem, index) {
         var name = $elem.attr('name');
 
         if (name !== undefined) {
@@ -222,8 +230,16 @@
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
 
-                if (level > 0 && identifiers[level] !== undefined) {
-                    identifiers[level] = $elem.closest(widgetOptions.widgetItem).index();
+                if (identifiers.length > 1) {
+                    var widgetsOptions = [];
+                    $elem.parents('div[data-dynamicform]').each(function(i){
+                        widgetsOptions[i] = eval($(this).attr('data-dynamicform'));
+                    });
+
+                    widgetsOptions = widgetsOptions.reverse();
+                    for (var i = identifiers.length - 1; i >= 1; i--) {
+                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                    }
                 }
 
                 name = matches[1] + '[' + identifiers.join('][') + ']' + matches[3];
@@ -239,34 +255,25 @@
 
         $(widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
-            var level = 0;
-            var currentWidgetOptions = widgetOptionsRoot;
-
             $(this).find('*').each(function() {
-                if ($(this).attr('data-dynamicform') !== undefined) {
-                    currentWidgetOptions = eval($(this).attr('data-dynamicform'));
-                    level = _getLevel($(this));
-                }
-
                 // update "id" attribute
-                _updateAttrID(currentWidgetOptions, $(this), index, level);
+                _updateAttrID($(this), index);
 
                 // update "name" attribute
-                _updateAttrName(currentWidgetOptions, $(this), index, level);
+                _updateAttrName($(this), index);
             });
         });
     };
 
-    var _fixFormValidatonInput = function(widgetOptions, input, index, id, name) {
-        var attribute = input.baseConfig;
+    var _fixFormValidatonInput = function(widgetOptions, attribute, id, name) {
         if (attribute !== undefined) {
-            attribute = $.extend(true, {}, attribute);
-            attribute.id = id;
+            attribute           = $.extend(true, {}, attribute);
+            attribute.id        = id;
             attribute.container = ".field-" + id;
-            attribute.input = "#" + id;
-            attribute.name = input.name.replace("{}", index);
-            attribute.value = $("#" + id).val();
-            attribute.status = 0;
+            attribute.input     = "#" + id;
+            attribute.name      = name;
+            attribute.value     = $("#" + id).val();
+            attribute.status    = 0;
 
             if ($("#" + widgetOptions.formId).yiiActiveForm("find", id) !== "undefined") {
                 $("#" + widgetOptions.formId).yiiActiveForm("remove", id);
@@ -276,42 +283,26 @@
         }
     };
 
-    var _fixFormValidatonInputs = function(widgetOptions, level, index, i) {
-         widgetOptions.fields.forEach(function(input) {
-            var identifiers    = _creatIdentifiers(level);
-            var yiiActiveFormAttribute = $("#" + widgetOptions.formId).yiiActiveForm("find", input.id.replace("{}", identifiers.join('-')));
-            if (yiiActiveFormAttribute !== undefined) {
-                input.baseConfig   = yiiActiveFormAttribute;
-                identifiers[0]     = index;
-                identifiers[level] = i;
-                var id             = input.id.replace("{}", identifiers.join('-'));
-                var name           = input.name.replace("{}", identifiers.join(']['));
-
-                _fixFormValidatonInput(widgetOptions, input, i, id, name);
-            }
-        });
-    };
-
     var _fixFormValidaton = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(widgetOptionsRoot.widgetItem).each(function(index) {
-            var $item = $(this);
-            var level = 0;
-            var currentWidgetOptions = widgetOptionsRoot;
-            _fixFormValidatonInputs(widgetOptionsRoot, level, index, index);
+        $(widgetOptionsRoot.widgetBody).find('input, textarea, select').each(function() {
+            var id   = $(this).attr('id');
+            var name = $(this).attr('name');
 
-            $(this).find('div[data-dynamicform]').each(function() {
-                currentWidgetOptions = eval($(this).attr('data-dynamicform'));
-                level = _getLevel($(this));
+            if (id !== undefined && name !== undefined) {
+                currentWidgetOptions = eval($(this).closest('div[data-dynamicform]').attr('data-dynamicform'));
+                var matches = id.match(regexID);
 
-                if (level > 0) {
-                    $(this).find(currentWidgetOptions.widgetItem).each(function(i) {
-
-                         _fixFormValidatonInputs(currentWidgetOptions, level, index, i);
-                    });
+                if (matches && matches.length === 4) {
+                    matches[2]      = matches[2].substring(1, matches[2].length - 1);
+                    var level       = _getLevel($(this));
+                    var identifiers = _createIdentifiers(level -1);
+                    var baseID      = matches[1] + '-' + identifiers.join('-') + '-' + matches[3];
+                    var attribute   = $("#" + currentWidgetOptions.formId).yiiActiveForm("find", baseID);
+                    _fixFormValidatonInput(currentWidgetOptions, attribute, id, name);
                 }
-            });
+            }
         });
     };
 

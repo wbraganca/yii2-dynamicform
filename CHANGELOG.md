@@ -5,6 +5,12 @@ dev-master
 ----------
 
 
+version 2.0.2
+-------------
+**Date:** 25-Fev-2015
+- bug #22: Correct reset attributes (id, name) when we have more than two nested widgets 
+
+
 version 2.0.1
 -------------
 **Date:** 23-Fev-2015
