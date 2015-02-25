@@ -66,15 +66,20 @@
         });
 
         $template.find('input, textarea, select').each(function() {
-            $(this).val('');
-        });
+            if ($(this).is(':checkbox') || $(this).is(':radio')) {
+                var type         = ($(this).is(':checkbox')) ? 'checkbox' : 'radio';
+                var inputName    = $(this).attr('name');
+                var $inputHidden = $template.find('input[type="hidden"][name="' + inputName + '"]').first();
+                var count        = $template.find('input[type="' + type +'"][name="' + inputName + '"]').length;
 
-        $template.find('input[type="checkbox"], input[type="radio"]').each(function() {
-            var inputName = $(this).attr('name');
-            var $inputHidden = $template.find('input[type="hidden"][name="' + inputName + '"]').first();
-            if ($inputHidden) {
-                $(this).val(1);
-                $inputHidden.val(0);
+                if ($inputHidden && count === 1) {
+                    $(this).val(1);
+                    $inputHidden.val(0);
+                }
+
+                $(this).prop('checked', false);
+            } else {
+                $(this).val(''); 
             }
         });
 

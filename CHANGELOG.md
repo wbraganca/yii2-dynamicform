@@ -3,6 +3,7 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+- bug: Fixes for: checkbox(), checkboxList(), radio() and radioList()
 
 
 version 2.0.2
