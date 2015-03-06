@@ -3,6 +3,7 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+- enh: Remove "error/success" class css template to be cloned.
 - bug: Fixes for: checkbox(), checkboxList(), radio() and radioList()
 
 

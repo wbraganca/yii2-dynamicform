@@ -155,9 +155,6 @@ class DynamicFormWidget extends \yii\base\Widget
         $options = Json::encode($this->_options);
         $this->registerOptions($view);
 
-        $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
-        $view->registerJs($js, $view::POS_READY);
-
         // add a click handler for the clone button
         $js = 'jQuery("#' . $this->formId . '").on("click", "' . $this->insertButton . '", function(e) {'. "\n";
         $js .= "    e.preventDefault();\n";
@@ -172,6 +169,9 @@ class DynamicFormWidget extends \yii\base\Widget
         $js .= '    jQuery(".' .  $this->widgetContainer . '").yiiDynamicForm("deleteItem", '. $this->_hashVar . ", e, jQuery(this));\n";
         $js .= "});\n";
         $view->registerJs($js, $view::POS_READY);
+
+        $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
+        $view->registerJs($js, $view::POS_LOAD);
     }
 
     public function run()
