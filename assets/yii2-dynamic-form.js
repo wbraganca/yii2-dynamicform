@@ -10,7 +10,7 @@
 
     var regexID = /^(.+?)([-\d-]{1,})(.+)$/i;
 
-    var regexName = /(^.+?)([\[\d{1,}\]]{1,})(\[.+\]$)/i;
+    var regexName = /(^.+?)(\[\d+\])(\[.+\]$)/i;
 
     $.fn.yiiDynamicForm = function (method) {
         if (methods[method]) {
