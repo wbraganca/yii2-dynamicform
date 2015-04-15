@@ -42,10 +42,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form']); ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($modelCustomer, 'first_name')->textInput(['maxlength' => 32]) ?>
+            <?= $form->field($modelCustomer, 'first_name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($modelCustomer, 'last_name')->textInput(['maxlength' => 32]) ?>
+            <?= $form->field($modelCustomer, 'last_name')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 
@@ -90,24 +90,24 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
-                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => 64]) ?>
+                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
-                                <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => 128]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-6">
-                                <?= $form->field($modelAddress, "[{$i}]address_line2")->textInput(['maxlength' => 128]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]address_line2")->textInput(['maxlength' => true]) ?>
                             </div>
                         </div><!-- .row -->
                         <div class="row">
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]city")->textInput(['maxlength' => 64]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]city")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => 32]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => 15]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => true]) ?>
                             </div>
                         </div><!-- .row -->
                     </div>
@@ -316,37 +316,41 @@ use yii\helpers\ArrayHelper;
 
 class Model extends \yii\base\Model
 {
-    public static function createMultiple($modelClass, $multipleModels=null)
+    /**
+     * Creates and populates a set of models.
+     *
+     * @param string $modelClass
+     * @param array $multipleModels
+     * @return array
+     */
+    public static function createMultiple($modelClass, $multipleModels = [])
     {
         $model    = new $modelClass;
         $formName = $model->formName();
         $post     = Yii::$app->request->post($formName);
         $models   = [];
-        $flag     = false;
 
-        if ($multipleModels !== null && is_array($multipleModels) && !empty($multipleModels)) {
+        if (! empty($multipleModels)) {
             $keys = array_keys(ArrayHelper::map($multipleModels, 'id', 'id'));
             $multipleModels = array_combine($keys, $multipleModels);
-            $flag = true;
         }
 
         if ($post && is_array($post)) {
             foreach ($post as $i => $item) {
-                if ($flag) {
-                    if (isset($item['id']) && !empty($item['id']) && isset($multipleModels[$item['id']])) {
-                        $models[] = $multipleModels[$item['id']];
-                    } else {
-                        $models[] = new $modelClass;
-                    }
+                if (isset($item['id']) && !empty($item['id']) && isset($multipleModels[$item['id']])) {
+                    $models[] = $multipleModels[$item['id']];
                 } else {
                     $models[] = new $modelClass;
                 }
             }
         }
+
         unset($model, $formName, $post);
+
         return $models;
     }
 }
+
 
 ```
 
@@ -367,10 +371,10 @@ use wbraganca\dynamicform\DynamicFormWidget;
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form']); ?>
     <div class="row">
         <div class="col-sm-6">
-            <?= $form->field($modelCustomer, 'first_name')->textInput(['maxlength' => 32]) ?>
+            <?= $form->field($modelCustomer, 'first_name')->textInput(['maxlength' => true]) ?>
         </div>
         <div class="col-sm-6">
-            <?= $form->field($modelCustomer, 'last_name')->textInput(['maxlength' => 32]) ?>
+            <?= $form->field($modelCustomer, 'last_name')->textInput(['maxlength' => true]) ?>
         </div>
     </div>
 
@@ -419,24 +423,24 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
-                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => 64]) ?>
+                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
-                                <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => 128]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-6">
-                                <?= $form->field($modelAddress, "[{$i}]address_line2")->textInput(['maxlength' => 128]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]address_line2")->textInput(['maxlength' => true]) ?>
                             </div>
                         </div><!-- .row -->
                         <div class="row">
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]city")->textInput(['maxlength' => 64]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]city")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => 32]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]state")->textInput(['maxlength' => true]) ?>
                             </div>
                             <div class="col-sm-4">
-                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => 15]) ?>
+                                <?= $form->field($modelAddress, "[{$i}]postal_code")->textInput(['maxlength' => true]) ?>
                             </div>
                         </div><!-- .row -->
                     </div>
