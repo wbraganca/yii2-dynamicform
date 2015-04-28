@@ -3,6 +3,7 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+- enh #24: Added support for "jquery.inputmask". It only works with Yii 2.0.4 or higher.
 - enh: Remove "error/success" class css template to be cloned.
 - bug: Fixes for: checkbox(), checkboxList(), radio() and radioList()
 
