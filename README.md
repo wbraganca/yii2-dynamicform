@@ -1,5 +1,14 @@
 yii2-dynamicform
 ===================
+
+[![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
+[![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Build Status](https://img.shields.io/travis/wbraganca/yii2-dynamicform/master.svg?style=flat-square)](https://travis-ci.org/wbraganca/yii2-dynamicform)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://scrutinizer-ci.com/g/wbraganca/yii2-dynamicform/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://scrutinizer-ci.com/g/wbraganca/yii2-dynamicform)
+[![Total Downloads](https://img.shields.io/packagist/dt/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/wbraganca/yii2-dynamicform)
+
+
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
 ![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform-2.0.0.jpg)
 
@@ -26,7 +35,7 @@ to the require section of your `composer.json` file.
 Usage
 ----------
 ###Hypothetical Scenario
-![Database](http://wbraganca.com/img/yii2-dynamicform-db.png)
+![Database](http://wbraganca.com/img/yii2--db.png)
 
 ###The View
 
