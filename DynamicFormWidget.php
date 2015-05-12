@@ -66,6 +66,11 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     public $min = 1;
     /**
+     *
+     * @var boolean Whether the dummy item should be deleted
+     */
+    public $shouldDelete = true;
+    /**
      * @var string
      */
     private $_options;
@@ -184,7 +189,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
         $this->_options['template'] = trim($document->saveHTML());
 
-        if (isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord) {
+        if ($this->shouldDelete && isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord) {
             $content = $this->removeItems($content);
         }
 
