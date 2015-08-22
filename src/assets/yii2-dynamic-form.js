@@ -468,10 +468,10 @@
                     window[kvClose] = true;
                 });
 
-                // if (configDepdrop) {
-                //     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
-                //     initDepdropS2(id, loadingText);
-                // }
+                if (configDepdrop) {
+                    var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
+                    initDepdropS2(id, loadingText);
+                }
             });
         }
     };
