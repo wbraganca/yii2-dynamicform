@@ -358,7 +358,7 @@
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().kvDatepicker('remove');
-                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
+                $(this).kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
 
