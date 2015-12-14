@@ -407,6 +407,29 @@
                 $(this).TouchSpin(eval($(this).attr('data-krajee-TouchSpin')));
             });
         }
+		
+		// "kartik-v/yii2-widget-typehead"
+        var $hasTypehead = $(widgetOptionsRoot.widgetItem).find('[data-krajee-typeahead]');
+        if ($hasTypehead.length > 0) {
+            $hasTypehead.each(function() {
+				
+				$(this).typeahead('destroy');
+				var bestPictures = new Bloodhound({
+				  datumTokenizer: Bloodhound.tokenizers.obj.whitespace($(this).attr('data-display')),
+				  queryTokenizer: Bloodhound.tokenizers.whitespace,
+				  remote: {
+					url: $(this).attr('data-url'),
+					wildcard: '%QUERY'
+				  }
+				});				
+                
+				$(this).typeahead(null, {
+				  name: $(this).attr('id'),
+				  display: $(this).attr('data-display'),
+				  source: bestPictures
+				});
+            });
+        }
 
         // "kartik-v/yii2-widget-colorinput"
         var $hasSpectrum = $(widgetOptionsRoot.widgetItem).find('[data-krajee-spectrum]');
