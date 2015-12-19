@@ -31,9 +31,9 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.0",
-        "symfony/dom-crawler": "~2.6.6",
-        "symfony/css-selector": "~2.6.6"
+        "yiisoft/yii2": ">=2.0.0",
+        "symfony/dom-crawler": ">=2.7.6",
+        "symfony/css-selector": ">=2.7.6"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*"
