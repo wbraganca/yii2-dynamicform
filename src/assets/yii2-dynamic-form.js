@@ -473,27 +473,6 @@
                 }
             });
         }
-
-        // "kartik-v/yii2-widget-typeahead"
-        var $hasTypeahead = $(widgetOptionsRoot.widgetItem).find('[data-krajee-typeahead]');
-        if ($hasTypeahead.length > 0) {
-            $hasTypeahead.each(function () {
-                var id = $(this).attr('id');
-                var configTypeHead = eval($(this).attr('data-krajee-typeahead'));
-                var engine = new Bloodhound({
-                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-                    queryTokenizer: Bloodhound.tokenizers.whitespace,
-                    remote: {
-                        url: url_dynamic,
-                        wildcard: '%QUERY'
-                    }
-                });
-                kvInitTA(id, configTypeHead, {
-                    display: 'value',
-                    source: engine
-                });
-            });
-        }
     };
 
 })(window.jQuery);
