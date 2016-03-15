@@ -5,6 +5,7 @@
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  * @contributor Vivek Marakana <vivek.marakana@gmail.com>
+ * @contributor Riza Saputra <riza.saputra@gmail.com>
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
