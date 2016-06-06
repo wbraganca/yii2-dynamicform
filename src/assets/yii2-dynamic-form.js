@@ -81,7 +81,7 @@
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                $(this).val('');
             }
         });
 
@@ -199,7 +199,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -208,7 +208,10 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        //identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index()
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                            identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
                     }
                 }
 
@@ -220,12 +223,12 @@
             }
         }
 
-        if (id !== newID) {
+        if (id !== newID && widgetOptions != undefined) {
             $elem.closest(widgetOptions.widgetItem).find('.field-' + id).each(function() {
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -250,7 +253,10 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        //identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                            identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
                     }
                 }
 
@@ -347,12 +353,23 @@
             });
         }
 
+        // old
         // "kartik-v/yii2-widget-datepicker"
         var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().datepicker('remove');
                 $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
+            });
+        }
+
+        // fix
+        // "kartik-v/yii2-widget-datepicker"
+        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
+        if ($hasDatepicker.length > 0) {
+            $hasDatepicker.each(function() {
+                $(this).parent().removeData().kvDatepicker('remove');
+                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
 
@@ -455,12 +472,13 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
                 $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
+                    //initSelect2DropStyle(id, kvClose, ev);
+                    $('#' + id).find('.kv-plugin-loading').remove();
                 });
 
                 $('#' + id).on('select2:unselect', function() {
@@ -471,6 +489,8 @@
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
+
+                $('.kv-plugin-loading').remove();
             });
         }
     };
