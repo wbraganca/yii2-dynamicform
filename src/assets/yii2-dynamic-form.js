@@ -366,7 +366,7 @@
         var $hasCheckbox = $(widgetOptionsRoot.widgetItem).find('[data-krajee-checkboxx]');
         if ($hasCheckbox.length > 0) {
             $hasCheckbox.each(function() {
-                $(this).checkboxX('remove');
+                $(this).checkboxX('destroy');
                 $(this).checkboxX(eval($(this).attr('data-krajee-checkboxx')));
             });
         }
