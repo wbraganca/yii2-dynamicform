@@ -214,7 +214,7 @@
 						if (typeof widgetsOptions[i] !== "undefined") {
 							identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
 						}
-                        //$(".kv-plugin-loading").addClass("hide");
+                        $(".kv-plugin-loading").addClass("hide");
                     }
                 }
 
@@ -359,6 +359,15 @@
             $hasDatepicker.each(function() {
                 $(this).parent().removeData().kvDatepicker('remove');
                 $(this).kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
+            });
+        }
+		
+		// "kartik-v/yii2-widget-checkbox"
+        var $hasCheckbox = $(widgetOptionsRoot.widgetItem).find('[data-krajee-checkboxx]');
+        if ($hasCheckbox.length > 0) {
+            $hasCheckbox.each(function() {
+                $(this).checkboxX('remove');
+                $(this).checkboxX(eval($(this).attr('data-krajee-checkboxx')));
             });
         }
 
