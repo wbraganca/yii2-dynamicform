@@ -415,6 +415,7 @@
 				
 				$(this).typeahead('destroy');
 				var isTemplate = $(this).attr('data-template');
+				var emptyText = $(this).attr('data-empty');
 				
 				var source = new Bloodhound({
 				  datumTokenizer: Bloodhound.tokenizers.obj.whitespace($(this).attr('data-display')),
@@ -432,7 +433,7 @@
 					  source: source,
 					  templates: {
 						empty: [
-						  'Sajnos nincs ilyen alkatrész! Kérem írja be és a rendszer a következő ajánlatkérésnél automatikusan felajánlja.'
+						 emptyText
 						],
 						suggestion: Handlebars.compile('<div><strong>'+isTemplate+'</div>')
 					  },				  				  
