@@ -214,7 +214,7 @@
 						if (typeof widgetsOptions[i] !== "undefined") {
 							identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
 						}
-                        $(".kv-plugin-loading").addClass("hide");
+                        //$(".kv-plugin-loading").addClass("hide");
                     }
                 }
 
@@ -361,15 +361,6 @@
                 $(this).kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
-		
-		// "kartik-v/yii2-widget-checkbox"
-        var $hasCheckbox = $(widgetOptionsRoot.widgetItem).find('[data-krajee-checkboxx]');
-        if ($hasCheckbox.length > 0) {
-            $hasCheckbox.each(function() {
-                $(this).checkboxX('destroy');
-                $(this).checkboxX(eval($(this).attr('data-krajee-checkboxx')));
-            });
-        }
 
         // "kartik-v/yii2-widget-timepicker"
         var $hasTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-timepicker]');
@@ -423,20 +414,36 @@
             $hasTypehead.each(function() {
 				
 				$(this).typeahead('destroy');
-				var bestPictures = new Bloodhound({
+				var isTemplate = $(this).attr('data-template');
+				
+				var source = new Bloodhound({
 				  datumTokenizer: Bloodhound.tokenizers.obj.whitespace($(this).attr('data-display')),
 				  queryTokenizer: Bloodhound.tokenizers.whitespace,
 				  remote: {
 					url: $(this).attr('data-url'),
 					wildcard: '%QUERY'
 				  }
-				});				
-                
-				$(this).typeahead(null, {
-				  name: $(this).attr('id'),
-				  display: $(this).attr('data-display'),
-				  source: bestPictures
-				});
+				});					
+				
+				if (typeof isTemplate != 'undefined') {
+					$(this).typeahead(null, {
+					  name: $(this).attr('id'),
+					  display: $(this).attr('data-display'),
+					  source: source,
+					  templates: {
+						empty: [
+						  'Sajnos nincs ilyen alkatrész! Kérem írja be és a rendszer a következő ajánlatkérésnél automatikusan felajánlja.'
+						],
+						suggestion: Handlebars.compile('<div><strong>'+isTemplate+'</div>')
+					  },				  				  
+					});					
+				} else {
+					$(this).typeahead(null, {
+					  name: $(this).attr('id'),
+					  display: $(this).attr('data-display'),
+					  source: source
+					});					
+				}	
             });
         }
 
