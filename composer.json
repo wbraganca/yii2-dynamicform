@@ -34,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "wbraganca\\dynamicform\\": "src"
+            "SteveSimpson\\dynamicform\\": "src"
         }
     }
 }
