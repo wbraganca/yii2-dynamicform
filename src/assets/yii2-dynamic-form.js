@@ -483,6 +483,7 @@
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
+                var $id = $('#' + id);
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
 
                 if ($(this).data('select2')) {
@@ -497,11 +498,18 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
+                var s2LoadingFunc = typeof initSelect2Loading != 'undefined' ? initSelect2Loading : initS2Loading;
+                var s2OpenFunc = typeof initSelect2DropStyle != 'undefined' ? initSelect2Loading : initS2Loading;
+                
+                $.when($id.select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
-                $('#' + id).on('select2:unselect', function() {
+                $id.on('select2:opening', function(ev) {
+                    s2OpenFunc(id, kvClose, ev);
+                });
+
+                $id.on('select2:unselect', function() {
                     window[kvClose] = true;
                 });
 
