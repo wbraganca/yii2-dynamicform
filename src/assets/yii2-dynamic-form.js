@@ -121,6 +121,9 @@
             $toclone = widgetOptions.template;
             $newclone = $toclone.clone(false, false);
 
+            // Distinct dynamic form items recursively
+            __distinctRecursive('[data-dynamicform^=dynamicform]', $newclone);
+
             if (widgetOptions.insertPosition === 'top') {
                 $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetBody).prepend($newclone);
             } else {
@@ -135,6 +138,19 @@
             // trigger a custom event for hooking
             $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.limitReached, widgetOptions.limit);
         }
+    };
+
+    // Distinct dynamic form recursively
+    var __distinctRecursive = function (regex, $item) {
+        var $items = $item.find(regex);
+
+        $.each($items, function (i, item) {
+            var formObject = eval($(item).data('dynamicform'));
+            var widgetItem = formObject.widgetItem;
+            $(item).find(widgetItem + ':not(:nth-child(1))').remove();
+
+            __distinctRecursive(regex, $(item));
+        });
     };
 
     var _removeValidations = function($elem, widgetOptions, count) {
