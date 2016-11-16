@@ -435,7 +435,7 @@
 						empty: [
 						 emptyText
 						],
-						suggestion: Handlebars.compile('<div><strong>'+isTemplate+'</div>')
+						suggestion: Handlebars.compile(isTemplate)
 					  },				  				  
 					});					
 				} else {
