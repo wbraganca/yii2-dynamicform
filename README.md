@@ -78,7 +78,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 'model' => $modelsAddress[0],
                 'formId' => 'dynamic-form',
                 'formFields' => [
-                    'full_name',
                     'address_line1',
                     'address_line2',
                     'city',
@@ -105,7 +104,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
-                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
                                 <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>
@@ -404,7 +402,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
         'model' => $modelsAddress[0],
         'formId' => 'dynamic-form',
         'formFields' => [
-            'full_name',
             'address_line1',
             'address_line2',
             'city',
@@ -438,7 +435,6 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
-                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
                                 <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>
