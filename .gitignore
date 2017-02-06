@@ -20,6 +20,7 @@ nbproject
 
 # composer itself is not needed
 composer.phar
+composer.lock
 
 # mac deployment helpers
 switch
