@@ -5,7 +5,7 @@
  * @license   https://github.com/bajadev/yii2-dynamicform/blob/master/LICENSE
  */
 
-namespace bajadev\dynamicform;
+namespace kidzen\dynamicform;
 
 /**
  * Asset bundle for dynamicform Widget
