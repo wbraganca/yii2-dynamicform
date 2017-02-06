@@ -49,7 +49,7 @@ Usage
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use kidzen\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
@@ -378,7 +378,7 @@ class Model extends \yii\base\Model
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use kidzen\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
