@@ -94,7 +94,7 @@
     };
 
     var _getWidgetOptionsRoot = function(widgetOptions) {
-        return eval($(widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
+        return eval($('.'+widgetOptions.widgetContainer+' '+widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
     };
 
     var _getLevel = function($elem) {
@@ -265,7 +265,7 @@
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(widgetOptionsRoot.widgetItem).each(function(index) {
+        $('.'+widgetOptionsRoot.widgetContainer+' '+widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
             $(this).find('*').each(function() {
                 // update "id" attribute
