@@ -1,5 +1,7 @@
-yii2-dynamicform
+yii2-dynamicform fork
 ===================
+
+Fix all dynamicform javascript errors with kartik select2
 
 [![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
 [![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
