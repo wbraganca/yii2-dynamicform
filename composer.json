@@ -11,20 +11,7 @@
         "yii2 dynamic form"
     ],
     
-	"repositories": [
-	        {
-	        "type": "package",
-	        "package": {
-	            "version": "master",
-	            "name": "suite117/yii2-dynamicform",
-	            "source": {
-	                "url": "https://github.com/suite117/yii2-dynamicform.git",
-	                "type": "git",
-	                "reference": "master"
-	            }
-	        }
-	    }
-	],
+
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
