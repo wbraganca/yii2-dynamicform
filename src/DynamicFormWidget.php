@@ -218,6 +218,15 @@ class DynamicFormWidget extends \yii\base\Widget
 
         $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
         $view->registerJs($js, $view::POS_LOAD);
+
+        // skip attribute validation if input not exist in yiiActiveForm.beforeValidateAttribute event
+        if (isset($this->_options['min']) && $this->_options['min'] === 0){
+            $js = 'jQuery("#' . $this->formId . '").on("beforeValidateAttribute", function(event, attribute){' . "\n";
+            $js .= "    if($(attribute.input).length == 0)\n";
+            $js .= "        return false;\n";
+            $js .= "});\n";
+            $view->registerJs($js, $view::POS_LOAD);
+        }
     }
 
     /**
