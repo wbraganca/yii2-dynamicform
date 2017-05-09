@@ -39,11 +39,11 @@
         },
 
         addItem: function (widgetOptions, e, $elem) {
-           _addItem(widgetOptions, e, $elem);
+            _addItem(widgetOptions, e, $elem);
         },
 
         deleteItem: function (widgetOptions, e, $elem) {
-           _deleteItem(widgetOptions, e, $elem);
+            _deleteItem(widgetOptions, e, $elem);
         },
 
         updateContainer: function () {
@@ -81,14 +81,16 @@
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                $(this).val('');
             }
         });
 
         // remove "error/success" css class
         var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-        $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        if(yiiActiveFormData && yiiActiveFormData.settings){
+            $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
+            $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        }
 
         return $template;
     };
@@ -207,8 +209,12 @@
                     });
 
                     widgetsOptions = widgetsOptions.reverse();
+
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                            identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
+
                     }
                 }
 
@@ -225,7 +231,7 @@
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -456,8 +462,12 @@
                 }
 
                 $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
-
+                //$.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
+
+                // $('#' + id).on('select2:unselect', function() {
+                //     window[kvClose] = true;
+                // });
 
                 $('#' + id).on('select2:opening', function(ev) {
                     initSelect2DropStyle(id, kvClose, ev);
@@ -470,6 +480,17 @@
                if (configDepdrop) {
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
+                }
+            });
+        }
+
+        // "kartik-v/yii2-checkbox-x"
+        var $hasCheckboxX = $(widgetOptionsRoot.widgetItem).find("[data-krajee-checkboxx]");
+        if ($hasCheckboxX.length > 0) {
+            $hasCheckboxX.each(function () {
+                if ($(this).attr("class") == "cbx-loading") {
+                    var ckxOptions = eval($(this).attr("data-krajee-checkboxx"));
+                    $(this).checkboxX(ckxOptions);
                 }
             });
         }
