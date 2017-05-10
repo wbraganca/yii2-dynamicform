@@ -1,17 +1,11 @@
 yii2-dynamicform
 ===================
 
-
-Modified Version by user1007017
-
-
-[![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
+[![Latest Version](https://img.shields.io/github/release/user1007017/yii2-dynamicform.svg?style=flat-square)](https://github.com/user1007017/yii2-dynamicform/releases)
 [![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/wbraganca/yii2-dynamicform)
-
+[![Total Downloads](https://img.shields.io/packagist/dt/user1007017/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/user1007017/yii2-dynamicform)
 
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
-![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform/sample.jpg)
 
 Installation
 ------------
@@ -21,13 +15,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist wbraganca/yii2-dynamicform "*"
+php composer.phar require --prefer-dist user1007017/yii2-dynamicform "*"
 ```
 
 or add
 
 ```
-"wbraganca/yii2-dynamicform": "*"
+"user1007017/yii2-dynamicform": "*"
 ```
 
 to the require section of your `composer.json` file.
@@ -82,6 +76,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                 'model' => $modelsAddress[0],
                 'formId' => 'dynamic-form',
                 'formFields' => [
+                    'full_name',
                     'address_line1',
                     'address_line2',
                     'city',
@@ -108,6 +103,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
+                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
                                 <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>
@@ -406,6 +402,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         'model' => $modelsAddress[0],
         'formId' => 'dynamic-form',
         'formFields' => [
+            'full_name',
             'address_line1',
             'address_line2',
             'city',
@@ -439,6 +436,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($modelAddress, "[{$i}]id");
                             }
                         ?>
+                        <?= $form->field($modelAddress, "[{$i}]full_name")->textInput(['maxlength' => true]) ?>
                         <div class="row">
                             <div class="col-sm-6">
                                 <?= $form->field($modelAddress, "[{$i}]address_line1")->textInput(['maxlength' => true]) ?>

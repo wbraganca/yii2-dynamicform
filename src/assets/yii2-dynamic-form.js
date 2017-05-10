@@ -4,6 +4,7 @@
  * A jQuery plugin to clone form elements in a nested manner, maintaining accessibility.
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
+ * @contributor Vivek Marakana <vivek.marakana@gmail.com>
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
@@ -201,7 +202,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -344,6 +345,8 @@
     var _restoreSpecialJs = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
+
+
         // "jquery.inputmask"
         var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');
         if ($hasInputmask.length > 0) {
@@ -461,23 +464,15 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
-                //$.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
+
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                // $('#' + id).on('select2:unselect', function() {
-                //     window[kvClose] = true;
-                // });
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
-                });
 
                 $('#' + id).on('select2:unselect', function() {
                     window[kvClose] = true;
                 });
 
-               if (configDepdrop) {
+                if (configDepdrop) {
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
@@ -494,6 +489,21 @@
                 }
             });
         }
+        // }
+        //
+        // // "kartik-v/yii2-checkbox-x"
+        // var $hasCheckboxX = $(this).find('[data-krajee-checkboxx]');
+        // if ($hasCheckboxX.length > 0) {
+        //     $hasCheckboxX.each(function() {
+        //         if ($(this).attr('class') === 'cbx-loading') {
+        //             var ckxOptions = eval($(this).attr('data-krajee-checkboxx'));
+        //             $(this).checkboxX(ckxOptions);
+        //         }
+        //     });
+        // }
+
+
+
     };
 
 })(window.jQuery);

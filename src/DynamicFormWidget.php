@@ -8,10 +8,11 @@
 namespace wbraganca\dynamicform;
 
 use Yii;
-use yii\helpers\Html;
-use yii\helpers\Json;
-use yii\base\InvalidConfigException;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\CssSelector\CssSelector;
+use yii\helpers\Json;
+use yii\helpers\Html;
+use yii\base\InvalidConfigException;
 
 /**
  * yii2-dynamicform is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
@@ -257,14 +258,22 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     private function removeItems($content)
     {
+        $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $crawler->filter($this->widgetItem)->each(function ($nodes) {
-            foreach ($nodes as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
+        $root = $document->appendChild($document->createElement('_root'));
+        $crawler->rewind();
+        $root->appendChild($document->importNode($crawler->current(), true));
+        $domxpath = new \DOMXPath($document);
+        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->widgetItem));
 
-        return $crawler->html();
+        foreach ($crawlerInverse as $elementToRemove) {
+            $parent = $elementToRemove->parentNode;
+            $parent->removeChild($elementToRemove);
+        }
+
+        $crawler->clear();
+        $crawler->add($document);
+        return $crawler->filter('body')->eq(0)->html();
     }
 }
