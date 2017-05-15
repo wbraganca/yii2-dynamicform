@@ -5,6 +5,7 @@
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  * @contributor Vivek Marakana <vivek.marakana@gmail.com>
+ * @contributor Yoda <user1007017@gmail.com>
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
@@ -489,18 +490,7 @@
                 }
             });
         }
-        // }
-        //
-        // // "kartik-v/yii2-checkbox-x"
-        // var $hasCheckboxX = $(this).find('[data-krajee-checkboxx]');
-        // if ($hasCheckboxX.length > 0) {
-        //     $hasCheckboxX.each(function() {
-        //         if ($(this).attr('class') === 'cbx-loading') {
-        //             var ckxOptions = eval($(this).attr('data-krajee-checkboxx'));
-        //             $(this).checkboxX(ckxOptions);
-        //         }
-        //     });
-        // }
+
 
 
 
