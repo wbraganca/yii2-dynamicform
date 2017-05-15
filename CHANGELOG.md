@@ -3,6 +3,13 @@ yii2-dynamicform change Log
 
 dev-master
 ----------
+
+- Support more Kartik Widgets in yii2-dynamic-form.js  
+  
+  "kartik-v/yii2-widget-select2"
+  
+  "kartik-v/yii2-checkbox-x"
+---
 - Bug #43 #37: Fixes for "kartik-v/yii2-widget-select2" and "kartik-v/yii2-widget-depdrop".
 - Bug #40: Fixed dropDownList reset after insert item.
 - Enh #25: Added enhancements to better support for nested widgets.
