@@ -151,7 +151,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </div>
 ```
 
-###Javascript Events
+### Javascript Events
 
 ```javascript
 
@@ -181,7 +181,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 ```
 
 
-###The Controller (sample code)
+### The Controller (sample code)
 
 ```php
 <?php
@@ -328,7 +328,7 @@ class CustomerController extends Controller
 }
 ```
 
-###Model Class
+### Model Class
 
 ```php
 <?php
