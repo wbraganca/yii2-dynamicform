@@ -490,7 +490,18 @@
                 }
             });
         }
-
+        // }
+        //
+        // // "kartik-v/yii2-checkbox-x"
+        // var $hasCheckboxX = $(this).find('[data-krajee-checkboxx]');
+        // if ($hasCheckboxX.length > 0) {
+        //     $hasCheckboxX.each(function() {
+        //         if ($(this).attr('class') === 'cbx-loading') {
+        //             var ckxOptions = eval($(this).attr('data-krajee-checkboxx'));
+        //             $(this).checkboxX(ckxOptions);
+        //         }
+        //     });
+        // }
 
 
 
