@@ -20,7 +20,13 @@
     "authors": [
         {
             "name": "kidzen",
-            "email": "kidzenfxc@gmail.com",
+            "email": "kidzenfxc@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/kidzen/yii2-dynamicform"
         }
     ],
     "require": {
