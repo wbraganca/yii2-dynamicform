@@ -23,6 +23,7 @@
             "email": "kidzenfxc@gmail.com"
         }
     ],
+
     "repositories": [
         {
             "type": "vcs",
@@ -30,6 +31,7 @@
         }
     ],
     "require": {
+        "bajadev/yii2-dynamicform": "dev-1.0",
         "yiisoft/yii2": "~2.0.5",
         "symfony/css-selector": "~2.8|~3.0",
         "symfony/dom-crawler": "~2.8|~3.0"
