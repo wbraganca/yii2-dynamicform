@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "mabentley85\\dynamicform\\": "src"
+            "wbraganca\\dynamicform\\": "src"
         }
     }
 }
