@@ -19,11 +19,6 @@ class DynamicFormAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@vendor/wbraganca/yii2-dynamicform/assets';
-
-    /**
-     * @inheritdoc
-     */
     public $depends = [
         'yii\web\JqueryAsset',
         'yii\widgets\ActiveFormAsset'
@@ -32,14 +27,10 @@ class DynamicFormAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public function init()
-    {
-        if (YII_DEBUG) {
-            $this->js = ['yii2-dynamic-form.js'];
-        } else {
-            $this->js = ['yii2-dynamic-form.min.js'];
-        }
+    public $sourcePath = '@vendor/wbraganca/yii2-dynamicform/src/assets';
 
-        parent::init();
-    }
+    /**
+     * @inheritdoc
+     */
+    public $js = ['yii2-dynamic-form.js'];
 }
