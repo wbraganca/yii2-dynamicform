@@ -27,7 +27,7 @@ class DynamicFormAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $sourcePath = '@vendor/wbraganca/yii2-dynamicform/src/assets';
+    public $sourcePath = '@vendor/mabentley85/yii2-dynamicform/src/assets';
 
     /**
      * @inheritdoc
