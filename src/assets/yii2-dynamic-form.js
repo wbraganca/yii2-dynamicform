@@ -87,7 +87,7 @@
 
         // remove "error/success" css class
         var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        if (typeof yiiActiveFormData.settings !== "undefined") {
+        if (typeof yiiActiveFormData !== "undefined" && typeof yiiActiveFormData.settings !== "undefined" ) {
             if(typeof yiiActiveFormData.settings.errorCssClass !== "undefined" && yiiActiveFormData.settings.errorCssClass.length > 0) {
                 $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
             }
