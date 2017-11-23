@@ -55,7 +55,6 @@
     };
 
     var _parseTemplate = function(widgetOptions) {
-
         var $template = $(widgetOptions.template);
         $template.find('div[data-dynamicform]').each(function(){
             var widgetOptions = eval($(this).attr('data-dynamicform'));
@@ -122,7 +121,12 @@
         var count = _count($elem, widgetOptions);
 
         if (count < widgetOptions.limit) {
-            $toclone = $(widgetOptions.widgetItem).first();
+            if (count == 0) {
+            	$toclone = $(widgetOptions.template);
+            } else {
+            	$toclone = $(widgetOptions.widgetItem).first();
+            }
+            
             $newclone = $toclone.clone(false, false);
 
             if (widgetOptions.insertPosition === 'top') {
@@ -271,9 +275,10 @@
 
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
-
+        
         $(widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
+
             $(this).find('*').each(function() {
                 // update "id" attribute
                 _updateAttrID($(this), index);

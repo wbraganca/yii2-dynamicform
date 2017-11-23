@@ -265,6 +265,6 @@ class DynamicFormWidget extends \yii\base\Widget
             }
         });
 
-        return $crawler->html();
+        return $crawler->filterXPath('//body')->html(); 
     }
 }
