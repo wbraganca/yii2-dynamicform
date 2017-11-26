@@ -571,6 +571,28 @@
             });
         }
 
+        // "kartik-v/yii2-checkbox-x"
+        var $hasCheckboxX = $(widgetOptionsRoot.widgetItem).find("[data-krajee-checkboxx]");
+        if ($hasCheckboxX.length > 0) {
+            $hasCheckboxX.each(function () {
+                if ($(this).attr("class") == "cbx-loading") {
+                    var ckxOptions = eval($(this).attr("data-krajee-checkboxx"));
+                    $(this).checkboxX(ckxOptions);
+                }
+            });
+        }
+        // }
+        //
+        // // "kartik-v/yii2-checkbox-x"
+        // var $hasCheckboxX = $(this).find('[data-krajee-checkboxx]');
+        // if ($hasCheckboxX.length > 0) {
+        //     $hasCheckboxX.each(function() {
+        //         if ($(this).attr('class') === 'cbx-loading') {
+        //             var ckxOptions = eval($(this).attr('data-krajee-checkboxx'));
+        //             $(this).checkboxX(ckxOptions);
+        //         }
+        //     });
+        // }
         // "kartik-v/yii2-widget-rating"
         var $hasRating = $(widgetOptionsRoot.widgetItem).find('[data-krajee-rating]');
         if ($hasRating.length > 0) {
