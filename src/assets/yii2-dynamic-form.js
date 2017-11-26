@@ -56,7 +56,6 @@
     };
 
     var _parseTemplate = function(widgetOptions) {
-
         var $template = $(widgetOptions.template);
         $template.find('div[data-dynamicform]').each(function(){
             var widgetOptions = eval($(this).attr('data-dynamicform'));
@@ -124,11 +123,11 @@
 
         if (count < widgetOptions.limit) {
             if (count == 0) {
-               $toclone = $(widgetOptions.template);
+            	$toclone = $(widgetOptions.template);
             } else {
-               $toclone = $(widgetOptions.widgetItem).first();
+            	$toclone = $(widgetOptions.widgetItem).first();
             }
-
+            
             $newclone = $toclone.clone(false, false);
 
             // Distinct dynamic form items recursively
@@ -296,9 +295,10 @@
 
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
-
+        
         $(widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
+
             $(this).find('*').each(function() {
                 // update "id" attribute
                 _updateAttrID($(this), index);
@@ -531,12 +531,12 @@
 
                 var s2LoadingFunc = typeof initSelect2Loading != 'undefined' ? initSelect2Loading : initS2Loading;
                 var s2OpenFunc = typeof initSelect2DropStyle != 'undefined' ? initSelect2Loading : initS2Loading;
-                
-                $.when($id.select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
+
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
-                $id.on('select2:opening', function(ev) {
+                $('#' + id).on('select2:opening', function(ev) {
                     s2OpenFunc(id, kvClose, ev);
                 });
 

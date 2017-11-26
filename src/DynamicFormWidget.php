@@ -92,7 +92,7 @@ class DynamicFormWidget extends \yii\base\Widget
         parent::init();
 
         if (empty($this->widgetContainer) || (preg_match('/^\w{1,}$/', $this->widgetContainer) === 0)) {
-            throw new InvalidConfigException('Invalid configuration to property "widgetContainer". 
+            throw new InvalidConfigException('Invalid configuration to property "widgetContainer".
                 Allowed only alphanumeric characters plus underline: [A-Za-z0-9_]');
         }
         if (empty($this->widgetBody)) {
@@ -265,6 +265,6 @@ class DynamicFormWidget extends \yii\base\Widget
             }
         });
 
-        return $crawler->html();
+        return $crawler->filterXPath('//body')->html();
     }
 }
