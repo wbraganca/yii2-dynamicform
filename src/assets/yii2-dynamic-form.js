@@ -387,17 +387,16 @@
             });
         }
 
-        // old
-        // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
-        if ($hasDatepicker.length > 0) {
-            $hasDatepicker.each(function() {
-                $(this).parent().removeData().kvDatepicker('remove');
-                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
+
+        // "kartik-v/yii2-widget-datetimepicker"
+        var $hasDateTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatetimepicker]');
+        if ($hasDateTimepicker.length > 0) {
+            $hasDateTimepicker.each(function() {
+                $(this).parent().removeData().datetimepicker('remove');
+                $(this).parent().datetimepicker(eval($(this).attr('data-krajee-kvdatetimepicker')));
             });
         }
 
-        // fix
         // "kartik-v/yii2-widget-datepicker"
         var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
         if ($hasDatepicker.length > 0) {
