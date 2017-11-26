@@ -88,9 +88,14 @@
 
         // remove "error/success" css class
         var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        if(yiiActiveFormData && yiiActiveFormData.settings){
-            $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-            $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        if (typeof yiiActiveFormData !== "undefined" && typeof yiiActiveFormData.settings !== "undefined" ) {
+            if(typeof yiiActiveFormData.settings.errorCssClass !== "undefined" && yiiActiveFormData.settings.errorCssClass.length > 0) {
+                $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
+            }
+
+            if(typeof yiiActiveFormData.settings.successCssClass !== "undefined" && yiiActiveFormData.settings.successCssClass.length > 0) {
+                $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+            }
         }
 
         return $template;
@@ -118,7 +123,12 @@
         var count = _count($elem, widgetOptions);
 
         if (count < widgetOptions.limit) {
-            $toclone = widgetOptions.template;
+            if (count == 0) {
+               $toclone = $(widgetOptions.template);
+            } else {
+               $toclone = $(widgetOptions.widgetItem).first();
+            }
+
             $newclone = $toclone.clone(false, false);
 
             // Distinct dynamic form items recursively
