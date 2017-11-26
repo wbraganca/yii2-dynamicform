@@ -324,6 +324,11 @@
             var id   = $(this).attr('id');
             var name = $(this).attr('name');
 
+			if(id === undefined && $(this).attr('type') == 'radio') {
+				/* Kartik Form Builder */
+				id = $(this).parents().eq(2).attr('id');
+			}
+			
             if (id !== undefined && name !== undefined) {
                 currentWidgetOptions = eval($(this).closest('div[data-dynamicform]').attr('data-dynamicform'));
                 var matches = id.match(regexID);
