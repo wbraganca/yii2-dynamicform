@@ -26,8 +26,8 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.0",
-        "symfony/dom-crawler": "~2.6.6",
-        "symfony/css-selector": "~2.6.6"
+        "symfony/dom-crawler": "~3.4.11",
+        "symfony/css-selector": "~3.4.11"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*"
