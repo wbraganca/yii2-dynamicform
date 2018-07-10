@@ -17,13 +17,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist wbraganca/yii2-dynamicform "*"
+php composer.phar require --prefer-dist msf-ocb/yii2-dynamicform "*"
 ```
 
 or add
 
 ```
-"wbraganca/yii2-dynamicform": "*"
+"msf-ocb/yii2-dynamicform": "*"
 ```
 
 to the require section of your `composer.json` file.
@@ -49,7 +49,7 @@ Usage
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use msf-ocb\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
@@ -378,7 +378,7 @@ class Model extends \yii\base\Model
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use msf-ocb\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
