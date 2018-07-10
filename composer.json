@@ -17,6 +17,7 @@
         "wiki": "https://github.com/MSF-OCB/yii2-dynamicform/wiki/",
         "source": "https://github.com/MSF-OCB/yii2-dynamicform"
     },
+    "minimum-stability": "stable",
     "authors": [
         {
             "name": "Msf-OCB",
