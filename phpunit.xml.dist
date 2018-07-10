@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="msf-ocb Test Suite">
+        <testsuite name="MSF-OCB Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

@@ -1,11 +1,11 @@
 <?php
 /**
- * @link      https://github.com/msf-ocb/yii2-dynamicform
+ * @link      https://github.com/MSF-OCB/yii2-dynamicform
  * @copyright Copyright (c) 2014 Wanderson Bragança
- * @license   https://github.com/msf-ocb/yii2-dynamicform/blob/master/LICENSE
+ * @license   https://github.com/MSF-OCB/yii2-dynamicform/blob/master/LICENSE
  */
 
-namespace msf-ocb\dynamicform;
+namespace MSF-OCB\dynamicform;
 
 use Yii;
 use yii\helpers\Html;
