@@ -35,6 +35,9 @@
         "symfony/dom-crawler": "~3.4.11",
         "symfony/css-selector": "~3.4.11"
     },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*"
+    },
     "autoload": {
         "psr-4": {
             "kidzen\\dynamicform\\": "src"
