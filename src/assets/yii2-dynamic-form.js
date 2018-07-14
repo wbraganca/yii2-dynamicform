@@ -5,6 +5,8 @@
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
  * @contributor Vivek Marakana <vivek.marakana@gmail.com>
+ * @contributor Yoda <user1007017@gmail.com>
+ * @contributor Vivek Marakana <vivek.marakana@gmail.com>
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
@@ -235,6 +237,7 @@
                     });
 
                     widgetsOptions = widgetsOptions.reverse();
+
                     for (var i = identifiers.length - 1; i >= 1; i--) {
 						if (typeof widgetsOptions[i] !== "undefined") {
 							identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
@@ -377,6 +380,8 @@
 
     var _restoreSpecialJs = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
+
+
 
         // "jquery.inputmask"
         var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');

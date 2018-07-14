@@ -1,13 +1,22 @@
 yii2-dynamicform
 ===================
 
-[![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
-[![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/wbraganca/yii2-dynamicform)
+Notes
+-----
 
+- This version supports following Kartik Widgets in yii2-dynamic-form.js :  
+  
+  "kartik-v/yii2-widget-select2"
+  
+  "kartik-v/yii2-checkbox-x"
+  
+  
+
+[![Latest Version](https://img.shields.io/github/release/user1007017/yii2-dynamicform.svg?style=flat-square)](https://github.com/user1007017/yii2-dynamicform/releases)
+[![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![Total Downloads](https://img.shields.io/packagist/dt/user1007017/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/user1007017/yii2-dynamicform)
 
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
-![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform/sample.jpg)
 
 Installation
 ------------
@@ -40,10 +49,10 @@ Demos
 Usage
 -----
 
-###Hypothetical Scenario
+### Hypothetical Scenario
 ![Database](http://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
 
-###The View
+### The View
 
 ```php
 <?php
@@ -142,7 +151,7 @@ use kidzen\dynamicform\DynamicFormWidget;
 </div>
 ```
 
-###Javascript Events
+### Javascript Events
 
 ```javascript
 
@@ -172,7 +181,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 ```
 
 
-###The Controller (sample code)
+### The Controller (sample code)
 
 ```php
 <?php
@@ -319,7 +328,7 @@ class CustomerController extends Controller
 }
 ```
 
-###Model Class
+### Model Class
 
 ```php
 <?php
