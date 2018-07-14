@@ -7,6 +7,7 @@
 
 namespace kidzen\dynamicform;
 
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Yii;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -25,7 +26,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     public $widgetContainer;
-     /**
+    /**
      * @var string
      */
     public $widgetBody;
@@ -41,7 +42,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     public $insertButton;
-     /**
+    /**
      * @var string
      */
     public $deleteButton;
@@ -49,7 +50,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string 'bottom' or 'top';
      */
     public $insertPosition = 'bottom';
-     /**
+    /**
      * @var Model|ActiveRecord the model used for the form
      */
     public $model;
@@ -134,7 +135,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $this->_options['fields']          = [];
 
         foreach ($this->formFields as $field) {
-             $this->_options['fields'][] = [
+            $this->_options['fields'][] = [
                 'id' => Html::getInputId($this->model, '[{}]' . $field),
                 'name' => Html::getInputName($this->model, '[{}]' . $field)
             ];
@@ -267,11 +268,11 @@ class DynamicFormWidget extends \yii\base\Widget
     {
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $crawler->filter($this->widgetItem)->each(function ($nodes) {
-            foreach ($nodes as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
+        $root = $document->appendChild($document->createElement('_root'));
+        $root->appendChild($document->importNode($crawler->getNode(0), true));
+        $domxpath = new \DOMXPath($document);
+        $cssSelector = new CssSelectorConverter();
+        $crawlerInverse = $domxpath->query($cssSelector->toXPath($this->widgetItem));
 
         return $crawler->filterXPath('//body')->html();
     }
