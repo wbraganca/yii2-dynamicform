@@ -49,7 +49,7 @@ Usage
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use MSF-OCB\dynamicform\DynamicFormWidget;
+use MSF-OCB\yii2-dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
