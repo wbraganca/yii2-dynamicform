@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "MSF-OCB\\dynamicform\\": "src"
+            "msfocb\\dynamicform\\": "src"
         }
     }
 }

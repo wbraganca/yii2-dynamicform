@@ -5,7 +5,7 @@
  * @license   https://github.com/MSF-OCB/yii2-dynamicform/blob/master/LICENSE
  */
 
-namespace MSF-OCB\dynamicform;
+namespace msfocb\dynamicform;
 
 use Yii;
 use yii\helpers\Html;
