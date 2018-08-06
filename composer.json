@@ -2,11 +2,11 @@
     "name": "msf-ocb/yii2-dynamicform",
     "description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
     "keywords": [
-        "MSF-OCB",
+        "MSF OCB",
         "yii2",
         "extension",
         "widget",
-        "yii2-dynamicform",
+        "yii2 dynamicform",
         "copy DOM element",
         "yii2 dynamic form"
     ],
@@ -21,8 +21,8 @@
     "authors": [
         {
             "name": "Msf-OCB",
-            "email": "info@MSF-OCB.com",
-            "homepage": "http://MSF-OCB.com"
+            "email": "info@msf.org",
+            "homepage": "https://www.msf.org/"
         }
     ],
     "require": {
