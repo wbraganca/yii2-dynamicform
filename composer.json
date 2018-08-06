@@ -20,7 +20,7 @@
     "minimum-stability": "stable",
     "authors": [
         {
-            "name": "MSFOCB",
+            "name": "msfocb",
             "email": "info@msf.org",
             "homepage": "https://www.msf.org/"
         }
