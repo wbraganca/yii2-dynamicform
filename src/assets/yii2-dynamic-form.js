@@ -8,7 +8,7 @@
 (function ($) {
     var pluginName = 'yiiDynamicForm';
 
-    var regexID = /^(.+?)([-\d-]{1,})(.+)$/i;
+    var regexID = /^(.+?)(-\d{1,}-)(.+)$/i;
 
     var regexName = /(^.+?)([\[\d{1,}\]]{1,})(\[.+\]$)/i;
 
