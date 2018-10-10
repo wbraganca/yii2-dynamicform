@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="wbraganca Test Suite">
+        <testsuite name="suite117 Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

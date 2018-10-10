@@ -1,13 +1,15 @@
-yii2-dynamicform
+yii2-dynamicform fork
 ===================
 
-[![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
+Fix all dynamicform javascript errors with kartik select2
+
+[![Latest Version](https://img.shields.io/github/release/suite117/yii2-dynamicform.svg?style=flat-square)](https://github.com/suite117/yii2-dynamicform/releases)
 [![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Total Downloads](https://img.shields.io/packagist/dt/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/wbraganca/yii2-dynamicform)
+[![Total Downloads](https://img.shields.io/packagist/dt/suite117/yii2-dynamicform.svg?style=flat-square)](https://packagist.org/packages/suite117/yii2-dynamicform)
 
 
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
-![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform/sample.jpg)
+![yii2-dynamicform](http://suite117.com/img/yii2-dynamicform/sample.jpg)
 
 Installation
 ------------
@@ -17,13 +19,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist wbraganca/yii2-dynamicform "*"
+php composer.phar require --prefer-dist suite117/yii2-dynamicform "*"
 ```
 
 or add
 
 ```
-"wbraganca/yii2-dynamicform": "*"
+"suite117/yii2-dynamicform": "*"
 ```
 
 to the require section of your `composer.json` file.
@@ -32,16 +34,16 @@ to the require section of your `composer.json` file.
 Demos
 -----
 
-* [Demo 1](http://wbraganca.com/yii2extensions/dynamicform-demo1/) - (Address Book).
-* [Demo 2](http://wbraganca.com/yii2extensions/dynamicform-demo2/) - (File Upload).
-* [Demo 3](http://wbraganca.com/yii2extensions/dynamicform-demo3/) - (Nested Dynamic Form).
+* [Demo 1](http://suite117.com/yii2extensions/dynamicform-demo1/) - (Address Book).
+* [Demo 2](http://suite117.com/yii2extensions/dynamicform-demo2/) - (File Upload).
+* [Demo 3](http://suite117.com/yii2extensions/dynamicform-demo3/) - (Nested Dynamic Form).
 
 
 Usage
 -----
 
 ###Hypothetical Scenario
-![Database](http://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
+![Database](http://suite117.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
 
 ###The View
 
@@ -49,7 +51,7 @@ Usage
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use suite117\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
@@ -378,7 +380,7 @@ class Model extends \yii\base\Model
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use wbraganca\dynamicform\DynamicFormWidget;
+use suite117\dynamicform\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
