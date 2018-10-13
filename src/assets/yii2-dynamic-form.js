@@ -8,7 +8,7 @@
 (function ($) {
     var pluginName = 'yiiDynamicForm';
 
-    var regexID = /^(.+?)([-\d-]{1,})(.+)$/i;
+    var regexID = /^(.+?)(-[\d]{1,}-)(.+)$/i;
 
     var regexName = /(^.+?)([\[\d{1,}\]]{1,})(\[.+\]$)/i;
 
@@ -94,7 +94,7 @@
     };
 
     var _getWidgetOptionsRoot = function(widgetOptions) {
-        return eval($(widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
+        return eval($('.'+widgetOptions.widgetContainer+' '+widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
     };
 
     var _getLevel = function($elem) {
@@ -265,7 +265,7 @@
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(widgetOptionsRoot.widgetItem).each(function(index) {
+        $('.'+widgetOptionsRoot.widgetContainer+' '+widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
             $(this).find('*').each(function() {
                 // update "id" attribute
@@ -348,11 +348,11 @@
         }
 
         // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
+        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
-                $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
+                $(this).parent().removeData().kvDatepicker('remove');
+                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
 
