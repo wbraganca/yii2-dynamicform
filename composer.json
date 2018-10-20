@@ -1,8 +1,9 @@
 {
-    "name": "wbraganca/yii2-dynamicform",
+    "name": "user1007017/yii2-dynamicform",
     "description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
     "keywords": [
         "wbraganca",
+        "user1007017",
         "yii2",
         "extension",
         "widget",
@@ -13,21 +14,33 @@
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/wbraganca/yii2-dynamicform/issues",
-        "wiki": "https://github.com/wbraganca/yii2-dynamicform/wiki/",
-        "source": "https://github.com/wbraganca/yii2-dynamicform"
+        "issues": "https://github.com/user1007017/yii2-dynamicform/issues",
+        "wiki": "https://github.com/user1007017/yii2-dynamicform/wiki/",
+        "source": "https://github.com/user1007017/yii2-dynamicform"
     },
     "authors": [
         {
             "name": "Wanderson Bragança",
             "email": "wanderson.wbc@gmail.com",
             "homepage": "http://wbraganca.com"
+        },
+        {
+            "name": "Vivek Marakana",
+            "email": "vivek.marakana@gmail.com",
+            "homepage": "http://htmlcsstutor.com"
+        },
+        {
+            "name": "Yoda",
+            "email": "user1007017@gmail.com"
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.5",
-        "symfony/css-selector": "~2.8|~3.0",
-        "symfony/dom-crawler": "~2.8|~3.0"
+        "yiisoft/yii2": ">=2.0.0",
+        "symfony/dom-crawler": ">=2.7.6",
+        "symfony/css-selector": ">=2.7.6"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*"
     },
     "autoload": {
         "psr-4": {
