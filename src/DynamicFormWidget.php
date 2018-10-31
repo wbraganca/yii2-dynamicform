@@ -10,7 +10,6 @@ namespace kidzen\dynamicform;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Yii;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\CssSelector\CssSelector;
 use yii\helpers\Json;
 use yii\helpers\Html;
 use yii\base\InvalidConfigException;
@@ -271,10 +270,10 @@ class DynamicFormWidget extends \yii\base\Widget
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
         $root = $document->appendChild($document->createElement('_root'));
-        $crawler->rewind();
-        $root->appendChild($document->importNode($crawler->current(), true));
+        $root->appendChild($document->importNode($crawler->getNode(0), true));
         $domxpath = new \DOMXPath($document);
-        $crawlerInverse = $domxpath->query(CssSelector::toXPath($this->widgetItem));
+        $cssSelector = new CssSelectorConverter();
+        $crawlerInverse = $domxpath->query($cssSelector->toXPath($this->widgetItem));
 
         foreach ($crawlerInverse as $elementToRemove) {
             $parent = $elementToRemove->parentNode;
