@@ -1,5 +1,5 @@
 {
-    "name": "msfocb/yii2-dynamicform",
+    "name": "msf-ocb/yii2-dynamicform",
     "description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
     "keywords": [
         "MSF OCB",
