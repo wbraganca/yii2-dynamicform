@@ -265,7 +265,7 @@
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
-        $(widgetOptionsRoot.widgetItem).each(function(index) {
+        $(widgetOptionsRoot.widgetItem, widgetOptions.widgetBody).each(function(index) {
             var $item = $(this);
             $(this).find('*').each(function() {
                 // update "id" attribute
