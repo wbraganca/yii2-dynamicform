@@ -40,10 +40,10 @@ Demos
 Usage
 -----
 
-###Hypothetical Scenario
+### Hypothetical Scenario
 ![Database](http://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
 
-###The View
+### The View
 
 ```php
 <?php
@@ -142,7 +142,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </div>
 ```
 
-###Javascript Events
+### Javascript Events
 
 ```javascript
 
@@ -172,7 +172,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 ```
 
 
-###The Controller (sample code)
+### The Controller (sample code)
 
 ```php
 <?php
@@ -319,7 +319,7 @@ class CustomerController extends Controller
 }
 ```
 
-###Model Class
+### Model Class
 
 ```php
 <?php
@@ -370,7 +370,7 @@ class Model extends \yii\base\Model
 ```
 
 
-###To zero or more elements (use the following code in your view file)
+### To zero or more elements (use the following code in your view file)
 
 
 ```php
