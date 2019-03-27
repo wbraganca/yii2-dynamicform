@@ -23,15 +23,18 @@
             "email": "kidzenfxc@gmail.com"
         }
     ],
-
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/kidzen/yii2-dynamicform"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.0",
+        "yiisoft/yii2": "~2.0.5",
         "symfony/dom-crawler": "~3.4.11",
         "symfony/css-selector": "~3.4.11"
     },
