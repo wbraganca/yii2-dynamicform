@@ -54,8 +54,12 @@
         }
     };
 
-    var _parseTemplate = function(widgetOptions) {
+    // Allow reset template to custom empty value.
+    var _emptyVal = function($el, value) {
+        $el.val($el.data("empty-value") || value);
+    }
 
+    var _parseTemplate = function(widgetOptions) {
         var $template = $(widgetOptions.template);
         $template.find('div[data-dynamicform]').each(function(){
             var widgetOptions = eval($(this).attr('data-dynamicform'));
@@ -73,15 +77,15 @@
                 var count        = $template.find('input[type="' + type +'"][name="' + inputName + '"]').length;
 
                 if ($inputHidden && count === 1) {
-                    $(this).val(1);
-                    $inputHidden.val(0);
+                    _emptyVal($(this), 1);
+                    _emptyVal($inputHidden, 0);
                 }
 
                 $(this).prop('checked', false);
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                _emptyVal($(this), '');
             }
         });
 
@@ -326,7 +330,7 @@
         if (matchID && matchID.length === 4) {
             for (index = 0; index < configDepdrop.depends.length; ++index) {
                 var match = configDepdrop.depends[index].match(regexID);
-                if (match && match.length === 4) {
+                if (match && match.length === 4 && match[2] !== '-') {
                     configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
                 }
             }
