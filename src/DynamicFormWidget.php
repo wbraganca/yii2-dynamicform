@@ -260,7 +260,6 @@ class DynamicFormWidget extends \yii\base\Widget
     {
         $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $crawler = new Crawler();
-        $spl_object = new \SplObjectStorage();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
         $root = $document->appendChild($document->createElement('_root'));
         $crawler->getIterator()->rewind();
