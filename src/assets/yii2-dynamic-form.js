@@ -326,7 +326,7 @@
         if (matchID && matchID.length === 4) {
             for (index = 0; index < configDepdrop.depends.length; ++index) {
                 var match = configDepdrop.depends[index].match(regexID);
-                if (match && match.length === 4) {
+                if (match && match.length === 4 && match[2].length > 1) {
                     configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
                 }
             }
