@@ -473,6 +473,14 @@
                 }
             });
         }
+
+        // "kartik-v/yii2-widget-switchinput"
+        var $hasSwitchinput = $(widgetOptionsRoot.widgetItem).find('[data-krajee-bootstrapswitch]');
+        if ($hasSwitchinput.length > 0) {
+            $hasSwitchinput.each(function() {
+                $(this).bootstrapSwitch(eval($(this).attr('data-krajee-bootstrapswitch')));
+            });
+        }
     };
 
 })(window.jQuery);
