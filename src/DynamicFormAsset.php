@@ -1,11 +1,11 @@
 <?php
 /**
- * @link      https://github.com/wbraganca/yii2-dynamicform
+ * @link      https://github.com/bajadev/yii2-dynamicform
  * @copyright Copyright (c) 2014 Wanderson Bragança
- * @license   https://github.com/wbraganca/yii2-dynamicform/blob/master/LICENSE
+ * @license   https://github.com/bajadev/yii2-dynamicform/blob/master/LICENSE
  */
 
-namespace wbraganca\dynamicform;
+namespace kidzen\dynamicform;
 
 /**
  * Asset bundle for dynamicform Widget
@@ -30,13 +30,11 @@ class DynamicFormAsset extends \yii\web\AssetBundle
     protected function setupAssets($type, $files = [])
     {
         $srcFiles = [];
-        $minFiles = [];
         foreach ($files as $file) {
             $srcFiles[] = "{$file}.{$type}";
-            $minFiles[] = "{$file}.min.{$type}";
         }
         if (empty($this->$type)) {
-            $this->$type = YII_DEBUG ? $srcFiles : $minFiles;
+            $this->$type = $srcFiles;
         }
     }
 

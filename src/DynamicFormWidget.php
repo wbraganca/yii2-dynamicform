@@ -1,17 +1,18 @@
 <?php
 /**
- * @link      https://github.com/wbraganca/yii2-dynamicform
+ * @link      https://github.com/bajadev/yii2-dynamicform
  * @copyright Copyright (c) 2014 Wanderson Bragança
- * @license   https://github.com/wbraganca/yii2-dynamicform/blob/master/LICENSE
+ * @license   https://github.com/bajadev/yii2-dynamicform/blob/master/LICENSE
  */
 
-namespace wbraganca\dynamicform;
+namespace kidzen\dynamicform;
 
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Yii;
-use yii\helpers\Html;
-use yii\helpers\Json;
-use yii\base\InvalidConfigException;
 use Symfony\Component\DomCrawler\Crawler;
+use yii\helpers\Json;
+use yii\helpers\Html;
+use yii\base\InvalidConfigException;
 
 /**
  * yii2-dynamicform is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
@@ -25,7 +26,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     public $widgetContainer;
-     /**
+    /**
      * @var string
      */
     public $widgetBody;
@@ -41,7 +42,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string
      */
     public $insertButton;
-     /**
+    /**
      * @var string
      */
     public $deleteButton;
@@ -49,7 +50,7 @@ class DynamicFormWidget extends \yii\base\Widget
      * @var string 'bottom' or 'top';
      */
     public $insertPosition = 'bottom';
-     /**
+    /**
      * @var Model|ActiveRecord the model used for the form
      */
     public $model;
@@ -92,7 +93,7 @@ class DynamicFormWidget extends \yii\base\Widget
         parent::init();
 
         if (empty($this->widgetContainer) || (preg_match('/^\w{1,}$/', $this->widgetContainer) === 0)) {
-            throw new InvalidConfigException('Invalid configuration to property "widgetContainer". 
+            throw new InvalidConfigException('Invalid configuration to property "widgetContainer".
                 Allowed only alphanumeric characters plus underline: [A-Za-z0-9_]');
         }
         if (empty($this->widgetBody)) {
@@ -134,7 +135,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $this->_options['fields']          = [];
 
         foreach ($this->formFields as $field) {
-             $this->_options['fields'][] = [
+            $this->_options['fields'][] = [
                 'id' => Html::getInputId($this->model, '[{}]' . $field),
                 'name' => Html::getInputName($this->model, '[{}]' . $field)
             ];
@@ -202,7 +203,7 @@ class DynamicFormWidget extends \yii\base\Widget
         DynamicFormAsset::register($view);
 
         // add a click handler for the clone button
-        $js = 'jQuery("#' . $this->formId . '").on("click", "' . $this->insertButton . '", function(e) {'. "\n";
+        $js = 'jQuery(document).on("click", "#'. $this->formId . ' '. $this->insertButton . '", function(e) {'. "\n";
         $js .= "    e.preventDefault();\n";
         $js .= '    jQuery(".' .  $this->widgetContainer . '").triggerHandler("beforeInsert", [jQuery(this)]);' . "\n";
         $js .= '    jQuery(".' .  $this->widgetContainer . '").yiiDynamicForm("addItem", '. $this->_hashVar . ", e, jQuery(this));\n";
@@ -210,7 +211,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $view->registerJs($js, $view::POS_READY);
 
         // add a click handler for the remove button
-        $js = 'jQuery("#' . $this->formId . '").on("click", "' . $this->deleteButton . '", function(e) {'. "\n";
+        $js = 'jQuery(document).on("click", "#'. $this->formId . ' '. $this->deleteButton . '", function(e) {'. "\n";
         $js .= "    e.preventDefault();\n";
         $js .= '    jQuery(".' .  $this->widgetContainer . '").yiiDynamicForm("deleteItem", '. $this->_hashVar . ", e, jQuery(this));\n";
         $js .= "});\n";
@@ -218,6 +219,14 @@ class DynamicFormWidget extends \yii\base\Widget
 
         $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
         $view->registerJs($js, $view::POS_LOAD);
+        // skip attribute validation if input not exist in yiiActiveForm.beforeValidateAttribute event
+        if (isset($this->_options['min']) && $this->_options['min'] === 0){
+            $js = 'jQuery("#' . $this->formId . '").on("beforeValidateAttribute", function(event, attribute){' . "\n";
+            $js .= "    if($(attribute.input).length == 0)\n";
+            $js .= "        return false;\n";
+            $js .= "});\n";
+            $view->registerJs($js, $view::POS_LOAD);
+        }
     }
 
     /**
@@ -233,7 +242,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $document->appendChild($document->importNode($results->first()->getNode(0), true));
         $this->_options['template'] = trim($document->saveHTML());
 
-        if (isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord) {
+        if (isset($this->_options['min']) && $this->_options['min'] === 0 && $this->model->isNewRecord && empty($this->model->getDirtyAttributes())) {
             $content = $this->removeItems($content);
         }
 
@@ -257,14 +266,22 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     private function removeItems($content)
     {
+        $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $crawler->filter($this->widgetItem)->each(function ($nodes) {
-            foreach ($nodes as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
+        $root = $document->appendChild($document->createElement('_root'));
+        $root->appendChild($document->importNode($crawler->getNode(0), true));
+        $domxpath = new \DOMXPath($document);
+        $cssSelector = new CssSelectorConverter();
+        $crawlerInverse = $domxpath->query($cssSelector->toXPath($this->widgetItem));
 
-        return $crawler->html();
+        foreach ($crawlerInverse as $elementToRemove) {
+            $parent = $elementToRemove->parentNode;
+            $parent->removeChild($elementToRemove);
+        }
+
+        $crawler->clear();
+        $crawler->add($document);
+        return $crawler->filter('body')->eq(0)->html();
     }
 }

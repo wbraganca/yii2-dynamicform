@@ -4,6 +4,9 @@
  * A jQuery plugin to clone form elements in a nested manner, maintaining accessibility.
  *
  * @author Wanderson Bragança <wanderson.wbc@gmail.com>
+ * @contributor Vivek Marakana <vivek.marakana@gmail.com>
+ * @contributor Yoda <user1007017@gmail.com>
+ * @contributor Vivek Marakana <vivek.marakana@gmail.com>
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
@@ -39,11 +42,11 @@
         },
 
         addItem: function (widgetOptions, e, $elem) {
-           _addItem(widgetOptions, e, $elem);
+            _addItem(widgetOptions, e, $elem);
         },
 
         deleteItem: function (widgetOptions, e, $elem) {
-           _deleteItem(widgetOptions, e, $elem);
+            _deleteItem(widgetOptions, e, $elem);
         },
 
         updateContainer: function () {
@@ -55,7 +58,6 @@
     };
 
     var _parseTemplate = function(widgetOptions) {
-
         var $template = $(widgetOptions.template);
         $template.find('div[data-dynamicform]').each(function(){
             var widgetOptions = eval($(this).attr('data-dynamicform'));
@@ -81,20 +83,27 @@
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                $(this).val('');
             }
         });
 
         // remove "error/success" css class
         var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-        $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        if (typeof yiiActiveFormData !== "undefined" && typeof yiiActiveFormData.settings !== "undefined" ) {
+            if(typeof yiiActiveFormData.settings.errorCssClass !== "undefined" && yiiActiveFormData.settings.errorCssClass.length > 0) {
+                $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
+            }
+
+            if(typeof yiiActiveFormData.settings.successCssClass !== "undefined" && yiiActiveFormData.settings.successCssClass.length > 0) {
+                $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+            }
+        }
 
         return $template;
     };
 
     var _getWidgetOptionsRoot = function(widgetOptions) {
-        return eval($(widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
+        return eval($('.'+widgetOptions.widgetContainer+' '+widgetOptions.widgetBody).parents('div[data-dynamicform]').last().attr('data-dynamicform'));
     };
 
     var _getLevel = function($elem) {
@@ -115,8 +124,16 @@
         var count = _count($elem, widgetOptions);
 
         if (count < widgetOptions.limit) {
-            $toclone = widgetOptions.template;
+            if (count == 0) {
+            	$toclone = $(widgetOptions.template);
+            } else {
+            	$toclone = $(widgetOptions.widgetItem).first();
+            }
+            
             $newclone = $toclone.clone(false, false);
+
+            // Distinct dynamic form items recursively
+            __distinctRecursive('[data-dynamicform^=dynamicform]', $newclone);
 
             if (widgetOptions.insertPosition === 'top') {
                 $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetBody).prepend($newclone);
@@ -132,6 +149,19 @@
             // trigger a custom event for hooking
             $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.limitReached, widgetOptions.limit);
         }
+    };
+
+    // Distinct dynamic form recursively
+    var __distinctRecursive = function (regex, $item) {
+        var $items = $item.find(regex);
+
+        $.each($items, function (i, item) {
+            var formObject = eval($(item).data('dynamicform'));
+            var widgetItem = formObject.widgetItem;
+            $(item).find(widgetItem + ':not(:nth-child(1))').remove();
+
+            __distinctRecursive(regex, $(item));
+        });
     };
 
     var _removeValidations = function($elem, widgetOptions, count) {
@@ -199,7 +229,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -207,8 +237,12 @@
                     });
 
                     widgetsOptions = widgetsOptions.reverse();
+
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+						if (typeof widgetsOptions[i] !== "undefined") {
+							identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+						}
+                        //$(".kv-plugin-loading").addClass("hide");
                     }
                 }
 
@@ -220,12 +254,12 @@
             }
         }
 
-        if (id !== newID) {
+        if (id !== newID && widgetOptions != undefined) {
             $elem.closest(widgetOptions.widgetItem).find('.field-' + id).each(function() {
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -250,7 +284,10 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        //identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                            identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
                     }
                 }
 
@@ -264,9 +301,10 @@
 
     var _updateAttributes = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
-
-        $(widgetOptionsRoot.widgetItem).each(function(index) {
+        
+        $('.'+widgetOptionsRoot.widgetContainer+' '+widgetOptionsRoot.widgetItem).each(function(index) {
             var $item = $(this);
+
             $(this).find('*').each(function() {
                 // update "id" attribute
                 _updateAttrID($(this), index);
@@ -302,6 +340,11 @@
             var id   = $(this).attr('id');
             var name = $(this).attr('name');
 
+			if(id === undefined && $(this).attr('type') == 'radio') {
+				/* Kartik Form Builder */
+				id = $(this).parents().eq(2).attr('id');
+			}
+			
             if (id !== undefined && name !== undefined) {
                 currentWidgetOptions = eval($(this).closest('div[data-dynamicform]').attr('data-dynamicform'));
                 var matches = id.match(regexID);
@@ -338,6 +381,8 @@
     var _restoreSpecialJs = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
+
+
         // "jquery.inputmask"
         var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');
         if ($hasInputmask.length > 0) {
@@ -347,12 +392,22 @@
             });
         }
 
+
+        // "kartik-v/yii2-widget-datetimepicker"
+        var $hasDateTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatetimepicker]');
+        if ($hasDateTimepicker.length > 0) {
+            $hasDateTimepicker.each(function() {
+                $(this).parent().removeData().datetimepicker('remove');
+                $(this).parent().datetimepicker(eval($(this).attr('data-krajee-kvdatetimepicker')));
+            });
+        }
+
         // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
+        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
-                $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
+                $(this).parent().removeData().kvDatepicker('destroy');
+                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
 
@@ -401,6 +456,46 @@
                 $(this).TouchSpin(eval($(this).attr('data-krajee-TouchSpin')));
             });
         }
+		
+		// "kartik-v/yii2-widget-typehead"
+        var $hasTypehead = $(widgetOptionsRoot.widgetItem).find('[data-krajee-typeahead]');
+        if ($hasTypehead.length > 0) {
+            $hasTypehead.each(function() {
+				
+				$(this).typeahead('destroy');
+				var isTemplate = $(this).attr('data-template');
+				var emptyText = $(this).attr('data-empty');
+				
+				var source = new Bloodhound({
+				  datumTokenizer: Bloodhound.tokenizers.obj.whitespace($(this).attr('data-display')),
+				  queryTokenizer: Bloodhound.tokenizers.whitespace,
+				  remote: {
+					url: $(this).attr('data-url'),
+					wildcard: '%QUERY'
+				  }
+				});					
+				
+				if (typeof isTemplate != 'undefined') {
+					$(this).typeahead(null, {
+					  name: $(this).attr('id'),
+					  display: $(this).attr('data-display'),
+					  source: source,
+					  templates: {
+						empty: [
+						 emptyText
+						],
+						suggestion: Handlebars.compile(isTemplate)
+					  },				  				  
+					});					
+				} else {
+					$(this).typeahead(null, {
+					  name: $(this).attr('id'),
+					  display: $(this).attr('data-display'),
+					  source: source
+					});					
+				}	
+            });
+        }
 
         // "kartik-v/yii2-widget-colorinput"
         var $hasSpectrum = $(widgetOptionsRoot.widgetItem).find('[data-krajee-spectrum]');
@@ -441,6 +536,7 @@
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
+                var $id = $('#' + id);
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
 
                 if ($(this).data('select2')) {
@@ -455,22 +551,58 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
+                var s2LoadingFunc = typeof initSelect2Loading != 'undefined' ? initSelect2Loading : initS2Loading;
+                var s2OpenFunc = typeof initSelect2DropStyle != 'undefined' ? initSelect2Loading : initS2Loading;
+                $.when($('#' + id).select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
                 $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
+                    s2OpenFunc(id, kvClose, ev);
+                    // $('#' + id).find('.kv-plugin-loading').remove();
                 });
 
-                $('#' + id).on('select2:unselect', function() {
+                $id.on('select2:unselect', function() {
                     window[kvClose] = true;
                 });
 
-               if (configDepdrop) {
+                if (configDepdrop) {
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
+
+                $('.kv-plugin-loading').remove();
+            });
+        }
+
+        // "kartik-v/yii2-checkbox-x"
+        var $hasCheckboxX = $(widgetOptionsRoot.widgetItem).find("[data-krajee-checkboxx]");
+        if ($hasCheckboxX.length > 0) {
+            $hasCheckboxX.each(function () {
+                if ($(this).attr("class") == "cbx-loading") {
+                    var ckxOptions = eval($(this).attr("data-krajee-checkboxx"));
+                    $(this).checkboxX(ckxOptions);
+                }
+            });
+        }
+        // }
+        //
+        // // "kartik-v/yii2-checkbox-x"
+        // var $hasCheckboxX = $(this).find('[data-krajee-checkboxx]');
+        // if ($hasCheckboxX.length > 0) {
+        //     $hasCheckboxX.each(function() {
+        //         if ($(this).attr('class') === 'cbx-loading') {
+        //             var ckxOptions = eval($(this).attr('data-krajee-checkboxx'));
+        //             $(this).checkboxX(ckxOptions);
+        //         }
+        //     });
+        // }
+        // "kartik-v/yii2-widget-rating"
+        var $hasRating = $(widgetOptionsRoot.widgetItem).find('[data-krajee-rating]');
+        if ($hasRating.length > 0) {
+            $hasRating.each(function() {
+                $(this).rating('destroy');
+                $(this).rating(eval($(this).attr('data-krajee-rating')));
             });
         }
     };
