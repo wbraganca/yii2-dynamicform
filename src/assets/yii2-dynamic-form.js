@@ -115,7 +115,7 @@
         var count = _count($elem, widgetOptions);
 
         if (count < widgetOptions.limit) {
-            $toclone = widgetOptions.template;
+            $toclone = $(widgetOptions.template);
             $newclone = $toclone.clone(false, false);
 
             if (widgetOptions.insertPosition === 'top') {
@@ -125,7 +125,7 @@
             }
 
             _updateAttributes(widgetOptions);
-            _restoreSpecialJs(widgetOptions);
+            _restoreSpecialJs(widgetOptions, true);
             _fixFormValidaton(widgetOptions);
             $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.afterInsert, $newclone);
         } else {
@@ -326,7 +326,7 @@
         if (matchID && matchID.length === 4) {
             for (index = 0; index < configDepdrop.depends.length; ++index) {
                 var match = configDepdrop.depends[index].match(regexID);
-                if (match && match.length === 4) {
+                if (match && match.length === 4 && match[2].length > 1) {
                     configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
                 }
             }
@@ -335,7 +335,7 @@
         $elem.depdrop(configDepdrop);
     };
 
-    var _restoreSpecialJs = function(widgetOptions) {
+    var _restoreSpecialJs = function(widgetOptions, addItem) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
         // "jquery.inputmask"
@@ -439,7 +439,7 @@
         // "kartik-v/yii2-widget-select2"
         var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
         if ($hasSelect2.length > 0) {
-            $hasSelect2.each(function() {
+            $hasSelect2.each(function(index) {
                 var id = $(this).attr('id');
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
 
@@ -455,13 +455,9 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
-                });
 
                 $('#' + id).on('select2:unselect', function() {
                     window[kvClose] = true;
@@ -470,6 +466,19 @@
                if (configDepdrop) {
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
+
+                    //init last added
+                    if (addItem && index == ($hasSelect2.length - 1)){
+                        var value = {};
+                        for (i = 0; i < configDepdrop.depends.length; i++) {
+                            var $el = $('#' + configDepdrop.depends[i]);
+                            var type = $el.attr('type');
+                            value[i] = (type === "checkbox" || type === "radio") ? $el.prop('checked') : $el.val();
+                        }
+                        for (i = 0; i < configDepdrop.depends.length; i++) {
+                            configDepdrop.processDep($(this), $('#' + configDepdrop.depends[i]).attr('id'), value, configDepdrop.depends);
+                        }
+                    }
                 }
             });
         }
