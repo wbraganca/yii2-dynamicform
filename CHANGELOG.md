@@ -1,39 +1,35 @@
-yii2-dynamicform change Log
-===========================
+# yii2-dynamicform change Log
 
-dev-master
-----------
+
+## [v2.0.3 (2020-05-18)](https://github.com/wbraganca/yii2-dynamicform/compare/v2.0.3...v2.0.2)
+
 - Enh: Updated composer.json ('symfony/dom-crawler': '~2.8|~3.0' and 'symfony/css-selector': '~2.8|~3.0').
 - Bug #40: Fixed dropDownList reset after insert item.
 - Enh #25: Added enhancements to better support for nested widgets.
 - Enh #24: Added support for "jquery.inputmask". It only works with Yii 2.0.4 or higher.
 - Enh: Remove "error/success" class css template to be cloned.
-- Bug: Fixes for: checkbox(), checkboxList(), radio() and radioList()
+- Bug: Fixes for: checkbox(), checkboxList(), radio() and radioList().
+- Bug #224: Fixes the cloning of elements.
 
 
-version 2.0.2
--------------
-**Date:** 25-Fev-2015
+## [v2.0.2 (2015-02-25)](https://github.com/wbraganca/yii2-dynamicform/compare/v2.0.2...v2.0.1)
+
 - Bug #22: Correct reset attributes (id, name) when we have more than two nested widgets 
 
 
-version 2.0.1
--------------
-**Date:** 23-Fev-2015
+## [v2.0.1 (2015-02-23)](https://github.com/wbraganca/yii2-dynamicform/compare/v2.0.1...v2.0.0)
+
 - Bug: Fixed error for the use of multiple nested widgets with zero initial elements
 
 
-version 2.0.0
--------------
-**Date:** 22-Fev-2015
+## v2.0.0 (2015-02-22)
+
 - Enh #20: Added trigger 'beforeDelete'
 - Bug #19: Fixes checkboxes on new items
 - Enh #15: Added support for multiple nested widgets
 
 
-version 1.1.0
--------------
-**Date:** 16-Dez-2014
+## v1.1.0 (2014-12-16)
 
 - Bug #7: Added support for "kartik-v/yii2-widget-depdrop" for working with type DepDrop::TYPE_SELECT2
 - Bug #8: Fixes to support the latest version of kartik-v widgets
@@ -46,8 +42,6 @@ version 1.1.0
 - Enh: Added support for "kartik-v/yii2-widget-colorinput"
 
 
-version 1.0.0
--------------
-**Date:** 05-Nov-2014
+## v1.0.0 (2014-11-05)
 
 Initial release
