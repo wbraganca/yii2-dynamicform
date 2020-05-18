@@ -1,5 +1,4 @@
-yii2-dynamicform
-===================
+# yii2-dynamicform
 
 [![Latest Version](https://img.shields.io/github/release/wbraganca/yii2-dynamicform.svg?style=flat-square)](https://github.com/wbraganca/yii2-dynamicform/releases)
 [![Software License](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -7,10 +6,10 @@ yii2-dynamicform
 
 
 It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.
-![yii2-dynamicform](http://wbraganca.com/img/yii2-dynamicform/sample.jpg)
+![yii2-dynamicform](https://wbraganca.com/img/yii2-dynamicform/sample.jpg)
 
-Installation
-------------
+## Installation
+
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
@@ -29,21 +28,21 @@ or add
 to the require section of your `composer.json` file.
 
 
-Demos
------
+## Demos
 
-* [Demo 1](http://wbraganca.com/yii2extensions/dynamicform-demo1/) - (Address Book).
-* [Demo 2](http://wbraganca.com/yii2extensions/dynamicform-demo2/) - (File Upload).
-* [Demo 3](http://wbraganca.com/yii2extensions/dynamicform-demo3/) - (Nested Dynamic Form).
+* [Demo 1](https://wbraganca.com/yii2extensions/dynamicform-demo1/) - (Address Book).
+* [Demo 2](https://wbraganca.com/yii2extensions/dynamicform-demo2/) - (File Upload).
+* [Demo 3](https://wbraganca.com/yii2extensions/dynamicform-demo3/) - (Nested Dynamic Form).
 
 
-Usage
------
+## Usage
 
-###Hypothetical Scenario
-![Database](http://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
 
-###The View
+### Hypothetical Scenario
+
+![Database](https://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
+
+### The View
 
 ```php
 <?php
@@ -142,7 +141,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
 </div>
 ```
 
-###Javascript Events
+### Javascript Events
 
 ```javascript
 
@@ -172,7 +171,7 @@ $(".dynamicform_wrapper").on("limitReached", function(e, item) {
 ```
 
 
-###The Controller (sample code)
+### The Controller (sample code)
 
 ```php
 <?php
@@ -319,7 +318,7 @@ class CustomerController extends Controller
 }
 ```
 
-###Model Class
+### Model Class
 
 ```php
 <?php
@@ -370,7 +369,7 @@ class Model extends \yii\base\Model
 ```
 
 
-###To zero or more elements (use the following code in your view file)
+### To zero or more elements (use the following code in your view file)
 
 
 ```php
