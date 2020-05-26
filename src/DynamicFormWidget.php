@@ -3,6 +3,7 @@
  * @link      https://github.com/wbraganca/yii2-dynamicform
  * @copyright Copyright (c) 2014 Wanderson Bragança
  * @license   https://github.com/wbraganca/yii2-dynamicform/blob/master/LICENSE
+ * @
  */
 
 namespace wbraganca\dynamicform;
@@ -257,14 +258,23 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     private function removeItems($content)
     {
+        $document = new \DOMDocument('1.0', \Yii::$app->charset);
         $crawler = new Crawler();
         $crawler->addHTMLContent($content, \Yii::$app->charset);
-        $crawler->filter($this->widgetItem)->each(function ($nodes) {
-            foreach ($nodes as $node) {
-                $node->parentNode->removeChild($node);
-            }
-        });
+        $root = $document->appendChild($document->createElement('_root'));
+        $crawler->getIterator()->rewind();
+        $root->appendChild($document->importNode($crawler->getIterator()->current(), true));
+        $domxpath = new \DOMXPath($document);
+        $css_selector = new CssSelectorConverter();
+        $crawlerInverse = $domxpath->query($css_selector->toXPath($this->widgetItem));
 
-        return $crawler->html();
+        foreach ($crawlerInverse as $elementToRemove) {
+            $parent = $elementToRemove->parentNode;
+            $parent->removeChild($elementToRemove);
+        }
+
+        $crawler->clear();
+        $crawler->add($document);
+        return $crawler->filter('body')->eq(0)->html();
     }
 }
