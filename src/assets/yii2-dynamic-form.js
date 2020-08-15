@@ -435,6 +435,17 @@
                 }
             });
         }
+        
+        // "kartik-v/yii2-numbercontrol"
+		var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
+		if ($hasNumberControl.length > 0) {
+			$hasNumberControl.each(function() {
+			var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
+				configNumberControl.displayId = $(this).parent().prev().attr('id');
+			if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
+				$(this).numberControl(configNumberControl);
+			});
+		}
 
         // "kartik-v/yii2-widget-select2"
         var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
@@ -472,17 +483,6 @@
                     initDepdropS2(id, loadingText);
                 }
             });
-
-            // "kartik-v/yii2-numbercontrol"
-            var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
-                if ($hasNumberControl.length > 0) {
-                    $hasNumberControl.each(function() {
-                    var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
-                    configNumberControl.displayId = $(this).parent().prev().attr('id');
-                    if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
-                        $(this).numberControl(configNumberControl);
-                });
-            }
         }
     };
 
