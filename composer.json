@@ -1,5 +1,5 @@
 {
-    "name": "wbraganca/yii2-dynamicform",
+    "name": "vaszloy/yii2-dynamicform",
     "description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
     "keywords": [
         "wbraganca",
@@ -12,6 +12,7 @@
     ],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
+    "homepage": "https://github.com/vaszloy/yii2-dynamicform",
     "support": {
         "issues": "https://github.com/wbraganca/yii2-dynamicform/issues",
         "wiki": "https://github.com/wbraganca/yii2-dynamicform/wiki/",
