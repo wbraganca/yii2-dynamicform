@@ -472,17 +472,16 @@
                     initDepdropS2(id, loadingText);
                 }
             });
-
-            // "kartik-v/yii2-numbercontrol"
-            var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
-            if ($hasNumberControl.length > 0) {
-                $hasNumberControl.each(function() {
-                    var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
-                    configNumberControl.displayId = $(this).parent().prev().attr('id');
-                    if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
-                    $(this).numberControl(configNumberControl);
-                });
-            }
+        }
+        // "kartik-v/yii2-numbercontrol"
+        var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
+        if ($hasNumberControl.length > 0) {
+            $hasNumberControl.each(function() {
+                var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
+                configNumberControl.displayId = $(this).parent().prev().attr('id');
+                if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
+                $(this).numberControl(configNumberControl);
+            });
         }
     };
 
