@@ -39,11 +39,11 @@
         },
 
         addItem: function (widgetOptions, e, $elem) {
-           _addItem(widgetOptions, e, $elem);
+            _addItem(widgetOptions, e, $elem);
         },
 
         deleteItem: function (widgetOptions, e, $elem) {
-           _deleteItem(widgetOptions, e, $elem);
+            _deleteItem(widgetOptions, e, $elem);
         },
 
         updateContainer: function () {
@@ -81,7 +81,7 @@
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                $(this).val('');
             }
         });
 
@@ -199,7 +199,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -225,7 +225,7 @@
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -435,24 +435,12 @@
                 }
             });
         }
-        
-        // "kartik-v/yii2-numbercontrol"
-		var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
-		if ($hasNumberControl.length > 0) {
-			$hasNumberControl.each(function() {
-			var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
-				configNumberControl.displayId = $(this).parent().prev().attr('id');
-			if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
-				$(this).numberControl(configNumberControl);
-			});
-		}
 
         // "kartik-v/yii2-widget-select2"
         var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
         if ($hasSelect2.length > 0) {
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
-                var $id = $('#' + id);
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
 
                 if ($(this).data('select2')) {
@@ -467,18 +455,15 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                var s2LoadingFunc = typeof initSelect2Loading != 'undefined' ? initSelect2Loading : initS2Loading;
-                var s2OpenFunc = typeof initSelect2DropStyle != 'undefined' ? initSelect2Loading : initS2Loading;
-                $.when($('#' + id).select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
                 $('#' + id).on('select2:opening', function(ev) {
-                    s2OpenFunc(id, kvClose, ev);
-                    // $('#' + id).find('.kv-plugin-loading').remove();
+                    initSelect2DropStyle(id, kvClose, ev);
                 });
 
-                $id.on('select2:unselect', function() {
+                $('#' + id).on('select2:unselect', function() {
                     window[kvClose] = true;
                 });
 
@@ -486,9 +471,18 @@
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
-
-                $('.kv-plugin-loading').remove();
             });
+
+            // "kartik-v/yii2-numbercontrol"
+            var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
+            if ($hasNumberControl.length > 0) {
+                $hasNumberControl.each(function() {
+                    var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
+                    configNumberControl.displayId = $(this).parent().prev().attr('id');
+                    if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
+                    $(this).numberControl(configNumberControl);
+                });
+            }
         }
     };
 
