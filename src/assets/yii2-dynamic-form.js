@@ -306,34 +306,8 @@
         });
     };
 
-    var _restoreKrajeeDepdrop = function($elem) {
-        var configDepdrop = $.extend(true, {}, eval($elem.attr('data-krajee-depdrop')));
-        var inputID = $elem.attr('id');
-        var matchID = inputID.match(regexID);
-
-        if (matchID && matchID.length === 4) {
-            for (index = 0; index < configDepdrop.depends.length; ++index) {
-                var match = configDepdrop.depends[index].match(regexID);
-                if (match && match.length === 4) {
-                    configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
-                }
-            }
-        }
-
-        $elem.depdrop(configDepdrop);
-    };
-
     var _restoreSpecialJs = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
-
-        // "jquery.inputmask"
-        var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');
-        if ($hasInputmask.length > 0) {
-            $hasInputmask.each(function() {
-                $(this).inputmask('remove');
-                $(this).inputmask(eval($(this).attr('data-plugin-inputmask')));
-            });
-        }
 
         // "kartik-v/yii2-widget-datepicker"
         var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
@@ -412,7 +386,38 @@
             });
         }
 
+        var _restoreKrajeeDepdrop = function($elem) {
+            var configDepdrop = $.extend(true, {}, eval($elem.attr('data-krajee-depdrop')));
+            var inputID = $elem.attr('id');
+            var matchID = inputID.match(regexID);
+
+            if (matchID && matchID.length === 4) {
+                for (index = 0; index < configDepdrop.depends.length; ++index) {
+                    var match = configDepdrop.depends[index].match(regexID);
+                    if (match && match.length === 4) {
+                        configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
+                    }
+                }
+            }
+            $elem.depdrop(configDepdrop);
+        };
+
         // "kartik-v/yii2-widget-depdrop"
+        var _restoreKrajeeDepdrop = function($elem) {
+            var configDepdrop = $.extend(true, {}, eval($elem.attr('data-krajee-depdrop')));
+            var inputID = $elem.attr('id');
+            var matchID = inputID.match(regexID);
+
+            if (matchID && matchID.length === 4) {
+                for (index = 0; index < configDepdrop.depends.length; ++index) {
+                    var match = configDepdrop.depends[index].match(regexID);
+                    if (match && match.length === 4) {
+                        configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
+                    }
+                }
+            }
+            $elem.depdrop(configDepdrop);
+        };
         var $hasDepdrop = $(widgetOptionsRoot.widgetItem).find('[data-krajee-depdrop]');
         if ($hasDepdrop.length > 0) {
             $hasDepdrop.each(function() {
@@ -421,6 +426,8 @@
                     $(this).unbind();
                     _restoreKrajeeDepdrop($(this));
                 }
+                var configDepdrop = eval($(this).attr('data-krajee-depdrop'));
+                $(this).depdrop(configDepdrop);
             });
         }
 
@@ -430,35 +437,19 @@
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
-
-                if ($(this).data('select2')) {
-                    $(this).select2('destroy');
-                }
-
-                var configDepdrop = $(this).data('depdrop');
-                if (configDepdrop) {
-                    configDepdrop = $.extend(true, {}, configDepdrop);
-                    $(this).removeData().off();
-                    $(this).unbind();
-                    _restoreKrajeeDepdrop($(this));
-                }
-                var s2LoadingFunc = typeof initSelect2Loading != 'undefined' ? initSelect2Loading : initS2Loading;
-                var s2OpenFunc = typeof initSelect2DropStyle != 'undefined' ? initSelect2Loading : initS2Loading;
-                $.when($('#' + id).select2(configSelect2)).done(s2LoadingFunc(id, '.select2-container--krajee'));
-
-                var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    s2OpenFunc(id, kvClose, ev);
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id));
+                $('#' + id).on('select2-open', function() {
+                    initSelect2DropStyle(id)
                 });
-
-                $('#' + id).on('select2:unselect', function() {
-                    window[kvClose] = true;
-                });
-
-                if (configDepdrop) {
-                    var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
-                    initDepdropS2(id, loadingText);
+                if ($(this).attr('data-krajee-depdrop')) {
+                    $(this).on('depdrop.beforeChange', function(e,i,v) {
+                        var configDepdrop = eval($(this).attr('data-krajee-depdrop'));
+                        var loadingText = (configDepdrop.loadingText)? configDepdrop.loadingText : 'Loading ...';
+                        $('#' + id).select2('data', {text: loadingText});
+                    });
+                    $(this).on('depdrop.change', function(e,i,v,c) {
+                        $('#' + id).select2('val', $('#' + id).val());
+                    });
                 }
             });
         }
