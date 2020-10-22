@@ -325,6 +325,23 @@
     var _restoreSpecialJs = function(widgetOptions) {
         var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
 
+        // "jquery.inputmask"
+        var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');
+        if ($hasInputmask.length > 0) {
+            $hasInputmask.each(function() {
+                $(this).inputmask('remove');
+                $(this).inputmask(eval($(this).attr('data-plugin-inputmask')));
+            });
+        }
+
+        // JUI Datepicker
+        $( ".picker" ).each(function() {
+            $( this ).datepicker({
+                dateFormat : 'dd-mm-yy',
+                language : 'en',
+            });
+        });
+
         // "kartik-v/yii2-widget-datepicker"
         var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
         if ($hasDatepicker.length > 0) {
