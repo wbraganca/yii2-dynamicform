@@ -473,6 +473,15 @@
                 }
             });
         }
+
+        // "kartik-v/yii2-widget-rating"
+        var $hasRating = $(widgetOptionsRoot.widgetItem).find('[data-krajee-rating]');
+        if ($hasRating.length > 0) {
+            $hasRating.each(function() {
+                $(this).rating('destroy');
+                $(this).rating(eval($(this).attr('data-krajee-rating')));
+            });
+        }
     };
 
 })(window.jQuery);
