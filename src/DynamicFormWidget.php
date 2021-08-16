@@ -66,6 +66,10 @@ class DynamicFormWidget extends \yii\base\Widget
      */
     public $min = 1;
     /**
+     * @var string css class for primary key field. Must be added to input field
+     */
+    public $pkKeyCss = '.pk-id-field';
+    /**
      * @var string
      */
     private $_options;
@@ -131,6 +135,7 @@ class DynamicFormWidget extends \yii\base\Widget
         $this->_options['insertPosition']  = $this->insertPosition;
         $this->_options['formId']          = $this->formId;
         $this->_options['min']             = $this->min;
+        $this->_options['pkKeyCss']        = $this->pkKeyCss;
         $this->_options['fields']          = [];
 
         foreach ($this->formFields as $field) {

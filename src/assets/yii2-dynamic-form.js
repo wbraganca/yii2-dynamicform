@@ -118,6 +118,9 @@
             $toclone = $(widgetOptions.template);
             $newclone = $toclone.clone(false, false);
 
+            // Remove PK from cloned element
+            $newclone.find('.' + widgetOptions.pkKeyCss).remove();
+
             if (widgetOptions.insertPosition === 'top') {
                 $elem.closest('.' + widgetOptions.widgetContainer).find(widgetOptions.widgetBody).prepend($newclone);
             } else {
