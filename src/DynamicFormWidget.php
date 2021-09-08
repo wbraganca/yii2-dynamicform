@@ -1,6 +1,6 @@
 <?php
 
-namespace wbraganca\dynamicform;
+namespace EvgeniDev\Yii2\DynamicForm;
 
 use Yii;
 use yii\helpers\Html;

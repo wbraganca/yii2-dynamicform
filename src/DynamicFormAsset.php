@@ -1,6 +1,6 @@
 <?php
 
-namespace wbraganca\dynamicform;
+namespace EvgeniDev\Yii2\DynamicForm;
 
 /**
  * Asset bundle for dynamicform Widget

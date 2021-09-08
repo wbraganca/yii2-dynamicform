@@ -11,16 +11,17 @@
         "copy DOM element",
         "yii2 dynamic form"
     ],
-    "type": "yii2-extension",
-    "license": "BSD-3-Clause",
+    "license": "proprietary",
     "support": {
         "issues": "https://github.com/evgenidev/yii2-dynamicform/issues",
         "wiki": "https://github.com/evgenidev/yii2-dynamicform/wiki/",
         "source": "https://github.com/evgenidev/yii2-dynamicform"
     },
+    "type": "yii2-extension",
     "authors": [
         {
-            "name": "EvgeniDev"
+            "name": "Miroshnichenko Evgeniy",
+            "email": "evgeni_mir@mail.ru"
         }
     ],
     "require": {
@@ -30,7 +31,7 @@
     },
     "autoload": {
         "psr-4": {
-            "wbraganca\\dynamicform\\": "src"
+            "EvgeniDev\\Yii2\\DynamicForm\\": "src"
         }
     }
 }
