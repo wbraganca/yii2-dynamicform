@@ -37,7 +37,6 @@ to the require section of your `composer.json` file.
 
 ## Usage
 
-
 ### Hypothetical Scenario
 
 ![Database](https://wbraganca.com/img/yii2-dynamicform/hypothetical-scenario.jpg)
