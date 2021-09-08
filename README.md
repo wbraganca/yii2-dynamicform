@@ -48,7 +48,7 @@ to the require section of your `composer.json` file.
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use evgenidev\dynamicform\DynamicFormWidget;
+use EvgeniDev\Yii2\DynamicForm\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
@@ -377,7 +377,7 @@ class Model extends \yii\base\Model
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use evgenidev\dynamicform\DynamicFormWidget;
+use EvgeniDev\Yii2\DynamicForm\DynamicFormWidget;
 ?>
 
 <div class="customer-form">
