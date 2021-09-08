@@ -1,9 +1,5 @@
 /**
- * yii2-dynamic-form
- *
- * A jQuery plugin to clone form elements in a nested manner, maintaining accessibility.
- *
- * @author Wanderson Bragança <wanderson.wbc@gmail.com>
+ * Fork yii2-dynamic-form Wanderson Bragança
  */
 (function ($) {
     var pluginName = 'yiiDynamicForm';
@@ -81,7 +77,7 @@
             } else if($(this).is('select')) {
                 $(this).find('option:selected').removeAttr("selected");
             } else {
-                $(this).val(''); 
+                $(this).val('');
             }
         });
 
@@ -199,7 +195,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -225,7 +221,7 @@
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -318,161 +314,31 @@
         });
     };
 
-    var _restoreKrajeeDepdrop = function($elem) {
-        var configDepdrop = $.extend(true, {}, eval($elem.attr('data-krajee-depdrop')));
-        var inputID = $elem.attr('id');
-        var matchID = inputID.match(regexID);
+    $('div[data-dynamicform]').on('afterInsert', function (e, item) {
+        let childDatePicker = $(item).find('[data-krajee-datetimepicker]');
+        let childSelect2 = $(item).find('[data-krajee-select2]');
 
-        if (matchID && matchID.length === 4) {
-            for (index = 0; index < configDepdrop.depends.length; ++index) {
-                var match = configDepdrop.depends[index].match(regexID);
-                if (match && match.length === 4) {
-                    configDepdrop.depends[index] = match[1] + matchID[2] + match[3];
-                }
+        if (childDatePicker.length > 0) {
+            if (childDatePicker.data('datetimepicker')) {
+                childDatePicker.datetimepicker('destroy');
             }
+
+            let dateTimePickerOptions = eval(childDatePicker.attr('data-krajee-datetimepicker'));
+            childDatePicker.datetimepicker(dateTimePickerOptions);
         }
 
-        $elem.depdrop(configDepdrop);
-    };
+        if (childSelect2.length > 0) {
+            if (childSelect2.data('select2')) {
+                childSelect2.select2('destroy');
+            }
 
-    var _restoreSpecialJs = function(widgetOptions) {
-        var widgetOptionsRoot = _getWidgetOptionsRoot(widgetOptions);
+            let s2Init = eval(childSelect2.attr('data-krajee-select2'));
+            let s2Options = eval(childSelect2.attr('data-s2-options'));
 
-        // "jquery.inputmask"
-        var $hasInputmask = $(widgetOptionsRoot.widgetItem).find('[data-plugin-inputmask]');
-        if ($hasInputmask.length > 0) {
-            $hasInputmask.each(function() {
-                $(this).inputmask('remove');
-                $(this).inputmask(eval($(this).attr('data-plugin-inputmask')));
-            });
+            let s2id = childSelect2.attr('id');
+            $.when(childSelect2.select2(s2Init)).done(initS2Loading(s2id, s2Options));
+            $(childSelect2).parent().find('.kv-plugin-loading').hide();
+            $(childSelect2).val(null).trigger('change');
         }
-
-        // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
-        if ($hasDatepicker.length > 0) {
-            $hasDatepicker.each(function() {
-                $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
-            });
-        }
-
-        // "kartik-v/yii2-widget-timepicker"
-        var $hasTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-timepicker]');
-        if ($hasTimepicker.length > 0) {
-            $hasTimepicker.each(function() {
-                $(this).removeData().off();
-                $(this).parent().find('.bootstrap-timepicker-widget').remove();
-                $(this).unbind();
-                $(this).timepicker(eval($(this).attr('data-krajee-timepicker')));
-            });
-        }
-
-        // "kartik-v/yii2-money"
-        var $hasMaskmoney = $(widgetOptionsRoot.widgetItem).find('[data-krajee-maskMoney]');
-        if ($hasMaskmoney.length > 0) {
-            $hasMaskmoney.each(function() {
-                $(this).parent().find('input').removeData().off();
-                var id = '#' + $(this).attr('id');
-                var displayID  = id + '-disp';
-                $(displayID).maskMoney('destroy');
-                $(displayID).maskMoney(eval($(this).attr('data-krajee-maskMoney')));
-                $(displayID).maskMoney('mask', parseFloat($(id).val()));
-                $(displayID).on('change', function () {
-                    var numDecimal = $(displayID).maskMoney('unmasked')[0];
-                    $(id).val(numDecimal);
-                    $(id).trigger('change');
-                });
-            });
-        }
-
-        // "kartik-v/yii2-widget-fileinput"
-        var $hasFileinput = $(widgetOptionsRoot.widgetItem).find('[data-krajee-fileinput]');
-        if ($hasFileinput.length > 0) {
-            $hasFileinput.each(function() {
-                $(this).fileinput(eval($(this).attr('data-krajee-fileinput')));
-            });
-        }
-
-        // "kartik-v/yii2-widget-touchspin"
-        var $hasTouchSpin = $(widgetOptionsRoot.widgetItem).find('[data-krajee-TouchSpin]');
-        if ($hasTouchSpin.length > 0) {
-            $hasTouchSpin.each(function() {
-                $(this).TouchSpin('destroy');
-                $(this).TouchSpin(eval($(this).attr('data-krajee-TouchSpin')));
-            });
-        }
-
-        // "kartik-v/yii2-widget-colorinput"
-        var $hasSpectrum = $(widgetOptionsRoot.widgetItem).find('[data-krajee-spectrum]');
-        if ($hasSpectrum.length > 0) {
-            $hasSpectrum.each(function() {
-                var id = '#' + $(this).attr('id');
-                var sourceID  = id + '-source';
-                $(sourceID).spectrum('destroy');
-                $(sourceID).unbind();
-                $(id).unbind();
-                var configSpectrum = eval($(this).attr('data-krajee-spectrum'));
-                configSpectrum.change = function (color) {
-                    jQuery(id).val(color.toString());
-                };
-                $(sourceID).attr('name', $(sourceID).attr('id'));
-                $(sourceID).spectrum(configSpectrum);
-                $(sourceID).spectrum('set', jQuery(id).val());
-                $(id).on('change', function(){
-                    $(sourceID).spectrum('set', jQuery(id).val());
-                });
-            });
-        }
-
-        // "kartik-v/yii2-widget-depdrop"
-        var $hasDepdrop = $(widgetOptionsRoot.widgetItem).find('[data-krajee-depdrop]');
-        if ($hasDepdrop.length > 0) {
-            $hasDepdrop.each(function() {
-                if ($(this).data('select2') === undefined) {
-                    $(this).removeData().off();
-                    $(this).unbind();
-                    _restoreKrajeeDepdrop($(this));
-                }
-            });
-        }
-
-        // "kartik-v/yii2-widget-select2"
-        var $hasSelect2 = $(widgetOptionsRoot.widgetItem).find('[data-krajee-select2]');
-        if ($hasSelect2.length > 0) {
-            $hasSelect2.each(function() {
-                var id = $(this).attr('id');
-                var configSelect2 = eval($(this).attr('data-krajee-select2'));
-
-                if ($(this).data('select2')) {
-                    $(this).select2('destroy');
-                }
-
-                var configDepdrop = $(this).data('depdrop');
-                if (configDepdrop) {
-                    configDepdrop = $.extend(true, {}, configDepdrop);
-                    $(this).removeData().off();
-                    $(this).unbind();
-                    _restoreKrajeeDepdrop($(this));
-                }
-
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
-
-                var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
-                });
-
-                $('#' + id).on('select2:unselect', function() {
-                    window[kvClose] = true;
-                });
-
-               if (configDepdrop) {
-                    var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
-                    initDepdropS2(id, loadingText);
-                }
-            });
-        }
-    };
-
+    });
 })(window.jQuery);
