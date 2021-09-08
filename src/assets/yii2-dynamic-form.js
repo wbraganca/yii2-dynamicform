@@ -120,7 +120,6 @@
             }
 
             _updateAttributes(widgetOptions);
-            _restoreSpecialJs(widgetOptions);
             _fixFormValidaton(widgetOptions);
             $elem.closest('.' + widgetOptions.widgetContainer).triggerHandler(events.afterInsert, $newclone);
         } else {
@@ -176,7 +175,6 @@
                 _removeValidations($todelete, widgetOptions, count);
                 $todelete.remove();
                 _updateAttributes(widgetOptions);
-                _restoreSpecialJs(widgetOptions);
                 _fixFormValidaton(widgetOptions);
                 $('.' + widgetOptions.widgetContainer).triggerHandler(events.afterDelete);
             }
