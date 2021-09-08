@@ -316,26 +316,31 @@
         let childSelect2 = $(item).find('[data-krajee-select2]');
 
         if (childDatePicker.length > 0) {
-            if (childDatePicker.data('datetimepicker')) {
-                childDatePicker.datetimepicker('destroy');
-            }
 
-            let dateTimePickerOptions = eval(childDatePicker.attr('data-krajee-datetimepicker'));
-            childDatePicker.datetimepicker(dateTimePickerOptions);
+            childDatePicker.each(function() {
+                if ($(this).data('datetimepicker')) {
+                    $(this).datetimepicker('destroy');
+                }
+
+                let dateTimePickerOptions = eval($(this).attr('data-krajee-datetimepicker'));
+                $(this).datetimepicker(dateTimePickerOptions);
+            });
         }
 
         if (childSelect2.length > 0) {
-            if (childSelect2.data('select2')) {
-                childSelect2.select2('destroy');
-            }
+            childSelect2.each(function () {
+                if ($(this).data('select2')) {
+                    $(this).select2('destroy');
+                }
 
-            let s2Init = eval(childSelect2.attr('data-krajee-select2'));
-            let s2Options = eval(childSelect2.attr('data-s2-options'));
+                let s2Init = eval($(this).attr('data-krajee-select2'));
+                let s2Options = eval($(this).attr('data-s2-options'));
 
-            let s2id = childSelect2.attr('id');
-            $.when(childSelect2.select2(s2Init)).done(initS2Loading(s2id, s2Options));
-            $(childSelect2).parent().find('.kv-plugin-loading').hide();
-            $(childSelect2).val(null).trigger('change');
+                let s2id = $(this).attr('id');
+                $.when($(this).select2(s2Init)).done(initS2Loading(s2id, s2Options));
+                $(this).parent().find('.kv-plugin-loading').hide();
+                $(this).val(null).trigger('change');
+            });
         }
     });
 })(window.jQuery);
