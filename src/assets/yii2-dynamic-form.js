@@ -45,7 +45,6 @@
         updateContainer: function () {
             var widgetOptions = eval($(this).attr('data-dynamicform'));
             _updateAttributes(widgetOptions);
-            _restoreSpecialJs(widgetOptions);
             _fixFormValidaton(widgetOptions);
         }
     };
