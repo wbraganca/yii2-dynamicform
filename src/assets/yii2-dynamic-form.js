@@ -335,12 +335,12 @@
         }
 
         // JUI Datepicker
-        $( ".picker" ).each(function() {
+        /*$( ".picker" ).each(function() {
             $( this ).datepicker({
                 dateFormat : 'dd-mm-yy',
                 language : 'en',
             });
-        });
+        });*/
 
         // "kartik-v/yii2-widget-datepicker"
         var datePickers = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
