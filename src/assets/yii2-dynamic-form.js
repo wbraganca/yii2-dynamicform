@@ -1,6 +1,18 @@
 /**
  * Fork yii2-dynamic-form Wanderson Bragança
  */
+function initTemplate(widgetOptions, template) {
+    var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
+
+    // Opera, Safari error.
+    if (typeof yiiActiveFormData !== 'undefined') {
+        template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
+        template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+    }
+
+    return template;
+}
+
 (function ($) {
     var pluginName = 'yiiDynamicForm';
 
@@ -35,11 +47,11 @@
         },
 
         addItem: function (widgetOptions, e, $elem) {
-           _addItem(widgetOptions, e, $elem);
+            _addItem(widgetOptions, e, $elem);
         },
 
         deleteItem: function (widgetOptions, e, $elem) {
-           _deleteItem(widgetOptions, e, $elem);
+            _deleteItem(widgetOptions, e, $elem);
         },
 
         updateContainer: function () {
@@ -81,11 +93,7 @@
         });
 
         // remove "error/success" css class
-        var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-        $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
-
-        return $template;
+        return initTemplate(widgetOptions, $template);
     };
 
     var _getWidgetOptionsRoot = function(widgetOptions) {
