@@ -33,5 +33,8 @@
         "psr-4": {
             "EvgeniDev\\Yii2\\DynamicForm\\": "src"
         }
-    }
+    },
+	"replace": {
+		"wbraganca/yii2-dynamicform":"2.0.*"
+	}
 }
