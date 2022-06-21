@@ -215,7 +215,11 @@ class DynamicFormWidget extends \yii\base\Widget
         $js .= "});\n";
         $view->registerJs($js, $view::POS_READY);
 
-        $js = 'jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
+        $js = 'const interval_'.$this->_hashVar.' = setInterval(function(){'."\n";
+        $js .= '    if (!jQuery("#' . $this->formId . '").data("yiiActiveForm")) { return; } '. "\n";
+        $js .= '    clearInterval(interval_'.$this->_hashVar.');' . "\n";
+        $js .= '    jQuery("#' . $this->formId . '").yiiDynamicForm(' . $this->_hashVar .');' . "\n";
+        $js .= '}, 1000);' . "\n";
         $view->registerJs($js, $view::POS_LOAD);
     }
 
