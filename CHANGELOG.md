@@ -1,5 +1,8 @@
 # yii2-dynamicform change Log
 
+## v3.0.0
+
+- Forked and WIP
 
 ## [v2.0.3 (2020-05-18)](https://github.com/wbraganca/yii2-dynamicform/compare/v2.0.3...v2.0.2)
 
