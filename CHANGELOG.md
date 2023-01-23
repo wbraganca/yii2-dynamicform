@@ -1,8 +1,9 @@
 # yii2-dynamicform change Log
 
-## v3.0.0
+## [v3.0.0 (2023-01-23)](https://github.com/projector22/yii2-dynamicform/compare/v3.0.0...v2.0.3)
 
-- Forked and WIP
+- Forked
+- Updated `symfony/css-selector` to `^6.0.0`.
 
 ## [v2.0.3 (2020-05-18)](https://github.com/wbraganca/yii2-dynamicform/compare/v2.0.3...v2.0.2)
 
