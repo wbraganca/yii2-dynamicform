@@ -1,5 +1,5 @@
 {
-    "name": "wbraganca/yii2-dynamicform",
+    "name": "projector22/yii2-dynamicform",
     "description": "It is widget to yii2 framework to clone form elements in a nested manner, maintaining accessibility.",
     "keywords": [
         "wbraganca",
@@ -22,6 +22,9 @@
             "name": "Wanderson Bragança",
             "email": "wanderson.wbc@gmail.com",
             "homepage": "http://wbraganca.com"
+        }, {
+            "name": "Gareth Palmer",
+            "email": "bravdthepally@gmail.com"
         }
     ],
     "require": {
@@ -31,7 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "wbraganca\\dynamicform\\": "src"
+            "projector22\\dynamicform\\": "src"
         }
     }
 }
