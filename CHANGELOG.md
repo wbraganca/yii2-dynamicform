@@ -1,5 +1,9 @@
 # yii2-dynamicform change Log
 
+## [v3.0.1 (2023-01-26)](https://github.com/projector22/yii2-dynamicform/compare/v3.0.0...v3.0.1)
+
+- Updated `symfony/dom-crawler` to `^6.0.0`.
+
 ## [v3.0.0 (2023-01-23)](https://github.com/projector22/yii2-dynamicform/compare/v3.0.0...v2.0.3)
 
 - Forked
