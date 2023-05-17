@@ -203,12 +203,19 @@
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
-                        widgetsOptions[i] = eval($(this).attr('data-dynamicform'));
+                        let widgetsOptionsItem = eval($(this).attr('data-dynamicform'));
+
+                        if (!widgetsOptionsItem || !widgetsOptionsItem.widgetItem) {
+                            return;
+                        }
+
+                        widgetsOptions[i] = widgetsOptionsItem;
                     });
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        let closest = widgetsOptions[i] ? $elem.closest(widgetsOptions[i].widgetItem) : null;
+                        identifiers[i] = closest ? closest.index() : null;
                     }
                 }
 
