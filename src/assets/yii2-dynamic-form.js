@@ -353,11 +353,11 @@
         }
 
         // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
+        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
         if ($hasDatepicker.length > 0) {
             $hasDatepicker.each(function() {
-                $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
+                $(this).parent().removeData().kvDatepicker('destroy');
+                $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
             });
         }
 
@@ -476,6 +476,14 @@
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
+            });
+        }
+
+        // "kartik-v/yii2-widget-switchinput"
+        var $hasSwitchinput = $(widgetOptionsRoot.widgetItem).find('[data-krajee-bootstrapswitch]');
+        if ($hasSwitchinput.length > 0) {
+            $hasSwitchinput.each(function() {
+                $(this).bootstrapSwitch(eval($(this).attr('data-krajee-bootstrapswitch')));
             });
         }
     };
