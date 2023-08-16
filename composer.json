@@ -25,9 +25,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "^2.0.48",
-        "symfony/css-selector": ">=2.8 <6.0",
-        "symfony/dom-crawler": ">=2.8 <6.0"
+        "symfony/css-selector": "^6.3",
+        "symfony/dom-crawler": "^6.2"
     },
     "autoload": {
         "psr-4": {
