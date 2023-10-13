@@ -87,8 +87,17 @@
 
         // remove "error/success" css class
         var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-        $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        // $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
+        // $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        var $errorCssClass = "has-error"; var $successCssClass = "has-success"; // init default yii class
+
+        // seek settings data only if object is not undefined.
+        if ( typeof yiiActiveFormData != 'undefined') {
+            $errorCssClass = yiiActiveFormData.settings.errorCssClass;
+            $successCssClass = yiiActiveFormData.settings.successCssClass;
+        }
+        $template.find('.' + $errorCssClass).removeClass($errorCssClass);
+        $template.find('.' + $successCssClass).removeClass($successCssClass);
 
         return $template;
     };
@@ -208,7 +217,9 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                          identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
                     }
                 }
 
@@ -250,7 +261,9 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        if(typeof widgetsOptions[i] !== 'undefined'){
+                          identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        }
                     }
                 }
 
@@ -455,12 +468,12 @@
                     _restoreKrajeeDepdrop($(this));
                 }
 
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id, '.select2-container--krajee'));
 
                 var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
 
                 $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
+                    initS2Loading(id, kvClose, ev);
                 });
 
                 $('#' + id).on('select2:unselect', function() {
@@ -471,6 +484,17 @@
                     var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
                     initDepdropS2(id, loadingText);
                 }
+            });
+        }
+        
+        // "kartik-v/yii2-numbercontol"
+        var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
+        if ($hasNumberControl.length > 0) {
+            $hasNumberControl.each(function() {
+                var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
+                configNumberControl.displayId = $(this).parent().prev().attr('id');
+                if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
+                $(this).numberControl(configNumberControl);
             });
         }
     };
