@@ -39,11 +39,11 @@
         },
 
         addItem: function (widgetOptions, e, $elem) {
-           _addItem(widgetOptions, e, $elem);
+            _addItem(widgetOptions, e, $elem);
         },
 
         deleteItem: function (widgetOptions, e, $elem) {
-           _deleteItem(widgetOptions, e, $elem);
+            _deleteItem(widgetOptions, e, $elem);
         },
 
         updateContainer: function () {
@@ -66,29 +66,17 @@
         });
 
         $template.find('input, textarea, select').each(function() {
-            if ($(this).is(':checkbox') || $(this).is(':radio')) {
-                var type         = ($(this).is(':checkbox')) ? 'checkbox' : 'radio';
-                var inputName    = $(this).attr('name');
-                var $inputHidden = $template.find('input[type="hidden"][name="' + inputName + '"]').first();
-                var count        = $template.find('input[type="' + type +'"][name="' + inputName + '"]').length;
-
-                if ($inputHidden && count === 1) {
-                    $(this).val(1);
-                    $inputHidden.val(0);
-                }
-
-                $(this).prop('checked', false);
-            } else if($(this).is('select')) {
-                $(this).find('option:selected').removeAttr("selected");
-            } else {
-                $(this).val(''); 
-            }
+            $(this).val('');
         });
 
-        // remove "error/success" css class
-        var yiiActiveFormData = $('#' + widgetOptions.formId).yiiActiveForm('data');
-        $template.find('.' + yiiActiveFormData.settings.errorCssClass).removeClass(yiiActiveFormData.settings.errorCssClass);
-        $template.find('.' + yiiActiveFormData.settings.successCssClass).removeClass(yiiActiveFormData.settings.successCssClass);
+        $template.find('input[type="checkbox"], input[type="radio"]').each(function() {
+            var inputName = $(this).attr('name');
+            var $inputHidden = $template.find('input[type="hidden"][name="' + inputName + '"]').first();
+            if ($inputHidden) {
+                $(this).val(1);
+                $inputHidden.val(0);
+            }
+        });
 
         return $template;
     };
@@ -199,7 +187,7 @@
                 matches[2] = matches[2].substring(1, matches[2].length - 1);
                 var identifiers = matches[2].split('-');
                 identifiers[0] = index;
-                
+
                 if (identifiers.length > 1) {
                     var widgetsOptions = [];
                     $elem.parents('div[data-dynamicform]').each(function(i){
@@ -225,7 +213,7 @@
                 $(this).removeClass('field-' + id).addClass('field-' + newID);
             });
             // update "for" attribute
-            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID); 
+            $elem.closest(widgetOptions.widgetItem).find("label[for='" + id + "']").attr('for',newID);
         }
 
         return newID;
@@ -250,7 +238,10 @@
 
                     widgetsOptions = widgetsOptions.reverse();
                     for (var i = identifiers.length - 1; i >= 1; i--) {
-                        identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                        
+                       if(typeof widgetsOptions[i] !== 'undefined'){
+                           identifiers[i] = $elem.closest(widgetsOptions[i].widgetItem).index();
+                       }
                     }
                 }
 
@@ -331,7 +322,6 @@
                 }
             }
         }
-
         $elem.depdrop(configDepdrop);
     };
 
@@ -347,14 +337,20 @@
             });
         }
 
-        // "kartik-v/yii2-widget-datepicker"
-        var $hasDatepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-datepicker]');
-        if ($hasDatepicker.length > 0) {
-            $hasDatepicker.each(function() {
-                $(this).parent().removeData().datepicker('remove');
-                $(this).parent().datepicker(eval($(this).attr('data-krajee-datepicker')));
+        // JUI Datepicker
+        /*$( ".picker" ).each(function() {
+            $( this ).datepicker({
+                dateFormat : 'dd-mm-yy',
+                language : 'en',
             });
-        }
+        });*/
+
+        // "kartik-v/yii2-widget-datepicker"
+        var datePickers = $(widgetOptionsRoot.widgetItem).find('[data-krajee-kvdatepicker]');
+        datePickers.each(function(index, el) {
+            //$(this).parent().removeData().kvDatepicker('remove');
+            $(this).parent().kvDatepicker(eval($(this).attr('data-krajee-kvdatepicker')));
+        });
 
         // "kartik-v/yii2-widget-timepicker"
         var $hasTimepicker = $(widgetOptionsRoot.widgetItem).find('[data-krajee-timepicker]');
@@ -433,6 +429,8 @@
                     $(this).unbind();
                     _restoreKrajeeDepdrop($(this));
                 }
+                var configDepdrop = eval($(this).attr('data-krajee-depdrop'));
+                $(this).depdrop(configDepdrop);
             });
         }
 
@@ -442,35 +440,31 @@
             $hasSelect2.each(function() {
                 var id = $(this).attr('id');
                 var configSelect2 = eval($(this).attr('data-krajee-select2'));
-
-                if ($(this).data('select2')) {
-                    $(this).select2('destroy');
-                }
-
-                var configDepdrop = $(this).data('depdrop');
-                if (configDepdrop) {
-                    configDepdrop = $.extend(true, {}, configDepdrop);
-                    $(this).removeData().off();
-                    $(this).unbind();
-                    _restoreKrajeeDepdrop($(this));
-                }
-
-                $.when($('#' + id).select2(configSelect2)).done(initSelect2Loading(id, '.select2-container--krajee'));
-
-                var kvClose = 'kv_close_' + id.replace(/\-/g, '_');
-
-                $('#' + id).on('select2:opening', function(ev) {
-                    initSelect2DropStyle(id, kvClose, ev);
+                $.when($('#' + id).select2(configSelect2)).done(initS2Loading(id));
+                $('#' + id).on('select2-open', function() {
+                    initSelect2DropStyle(id)
                 });
-
-                $('#' + id).on('select2:unselect', function() {
-                    window[kvClose] = true;
-                });
-
-               if (configDepdrop) {
-                    var loadingText = (configDepdrop.loadingText) ? configDepdrop.loadingText : 'Loading ...';
-                    initDepdropS2(id, loadingText);
+                if ($(this).attr('data-krajee-depdrop')) {
+                    $(this).on('depdrop.beforeChange', function(e,i,v) {
+                        var configDepdrop = eval($(this).attr('data-krajee-depdrop'));
+                        var loadingText = (configDepdrop.loadingText)? configDepdrop.loadingText : 'Loading ...';
+                        $('#' + id).select2('data', {text: loadingText});
+                    });
+                    $(this).on('depdrop.change', function(e,i,v,c) {
+                        $('#' + id).select2('val', $('#' + id).val());
+                    });
                 }
+            });
+        }
+
+        // "kartik-v/yii2-numbercontrol"
+        var $hasNumberControl = $(widgetOptionsRoot.widgetItem).find('[data-krajee-numbercontrol]');
+        if ($hasNumberControl.length > 0) {
+            $hasNumberControl.each(function() {
+                var configNumberControl = eval($(this).attr('data-krajee-numbercontrol'));
+                configNumberControl.displayId = $(this).parent().prev().attr('id');
+                if ($(this).data('numberControl')) { $(this).numberControl('destroy'); }
+                $(this).numberControl(configNumberControl);
             });
         }
     };
